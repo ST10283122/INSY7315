@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:id="@+id/headerSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/logoSmall"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/ic_logo"
+                app:tint="#D4AF37"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="KEY POLYGRAPH"
+                    android:textSize="16sp"
+                    android:textColor="#D4AF37"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.1"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AND INVESTIGATIONS"
+                    android:textSize="11sp"
+                    android:textColor="#B8960F"
+                    android:fontFamily="sans-serif-light"
+                    android:letterSpacing="0.15"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Client Portal"
+                    android:textSize="12sp"
+                    android:textColor="#999999"
+                    android:fontFamily="sans-serif-light"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Welcome Section -->
+        <LinearLayout
+            android:id="@+id/welcomeSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#1A1A1A"
+            android:padding="24dp"
+            app:layout_constraintTop_toBottomOf="@id/headerSection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome Back"
+                android:textSize="24sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans-serif-medium"/>
+
+            <TextView
+                android:id="@+id/userNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="John Doe"
+                android:textSize="18sp"
+                android:textColor="#D4AF37"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="4dp"/>
+
+            <View
+                android:layout_width="40dp"
+                android:layout_height="2dp"
+                android:background="#D4AF37"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Manage your polygraph sessions and records"
+                android:textSize="13sp"
+                android:textColor="#999999"
+                android:layout_marginTop="12dp"/>
+        </LinearLayout>
+
+        <!-- Services Label -->
+        <TextView
+            android:id="@+id/servicesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SERVICES"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:letterSpacing="0.2"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/welcomeSection"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="40dp"/>
+
+        <!-- Book Session Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/bookSessionCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#1A1A1A"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintTop_toBottomOf="@id/servicesLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/bookIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_calendar"
+                    android:contentDescription="Book Session"
+                    app:tint="#D4AF37"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/bookTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Book Session"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-medium"
+                    app:layout_constraintTop_toTopOf="@id/bookIcon"
+                    app:layout_constraintStart_toEndOf="@id/bookIcon"
+                    app:layout_constraintEnd_toStartOf="@id/bookArrow"
+                    android:layout_marginStart="20dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Schedule a new polygraph test"
+                    android:textSize="13sp"
+                    android:textColor="#999999"
+                    app:layout_constraintTop_toBottomOf="@id/bookTitle"
+                    app:layout_constraintStart_toEndOf="@id/bookIcon"
+                    app:layout_constraintEnd_toStartOf="@id/bookArrow"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"/>
+
+                <ImageView
+                    android:id="@+id/bookArrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    android:contentDescription="Navigate"
+                    app:tint="#D4AF37"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Test History Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/testHistoryCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#1A1A1A"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintTop_toBottomOf="@id/bookSessionCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/historyIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_history"
+                    android:contentDescription="Test History"
+                    app:tint="#D4AF37"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/historyTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Test History"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-medium"
+                    app:layout_constraintTop_toTopOf="@id/historyIcon"
+                    app:layout_constraintStart_toEndOf="@id/historyIcon"
+                    app:layout_constraintEnd_toStartOf="@id/historyArrow"
+                    android:layout_marginStart="20dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="View past polygraph test results"
+                    android:textSize="13sp"
+                    android:textColor="#999999"
+                    app:layout_constraintTop_toBottomOf="@id/historyTitle"
+                    app:layout_constraintStart_toEndOf="@id/historyIcon"
+                    app:layout_constraintEnd_toStartOf="@id/historyArrow"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"/>
+
+                <ImageView
+                    android:id="@+id/historyArrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    android:contentDescription="Navigate"
+                    app:tint="#D4AF37"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Payment History Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/paymentHistoryCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#1A1A1A"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintTop_toBottomOf="@id/testHistoryCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="24dp">
+
+                <ImageView
+                    android:id="@+id/paymentIcon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_payment"
+                    android:contentDescription="Payment History"
+                    app:tint="#D4AF37"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/paymentTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Payment History"
+                    android:textSize="20sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-medium"
+                    app:layout_constraintTop_toTopOf="@id/paymentIcon"
+                    app:layout_constraintStart_toEndOf="@id/paymentIcon"
+                    app:layout_constraintEnd_toStartOf="@id/paymentArrow"
+                    android:layout_marginStart="20dp"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="View invoices and payment records"
+                    android:textSize="13sp"
+                    android:textColor="#999999"
+                    app:layout_constraintTop_toBottomOf="@id/paymentTitle"
+                    app:layout_constraintStart_toEndOf="@id/paymentIcon"
+                    app:layout_constraintEnd_toStartOf="@id/paymentArrow"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="4dp"/>
+
+                <ImageView
+                    android:id="@+id/paymentArrow"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_arrow_forward"
+                    android:contentDescription="Navigate"
+                    app:tint="#D4AF37"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Footer -->
+        <TextView
+            android:id="@+id/footerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Secure • Confidential • Professional"
+            android:textSize="11sp"
+            android:textColor="#666666"
+            android:letterSpacing="0.1"
+            android:fontFamily="sans-serif-light"
+            app:layout_constraintTop_toBottomOf="@id/paymentHistoryCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="48dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
