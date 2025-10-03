@@ -1,0 +1,32 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="80dp"
+    android:height="80dp"
+    android:viewportWidth="80"
+    android:viewportHeight="80">
+
+    <!-- Outer Circle -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M40,5 A35,35 0,1,1 40,75 A35,35 0,1,1 40,5 Z"/>
+
+    <!-- Inner Circle (black) -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M40,10 A30,30 0,1,1 40,70 A30,30 0,1,1 40,10 Z"/>
+
+    <!-- Letter P -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M30,25 L35,25 L35,42 L42,42 C46,42 48,40 48,36 C48,32 46,30 42,30 L35,30 L35,25 L42,25 C49,25 53,29 53,36 C53,43 49,47 42,47 L35,47 L35,55 L30,55 Z"/>
+
+    <!-- Decorative lines -->
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.5"
+        android:pathData="M25,60 L55,60"/>
+
+    <path
+        android:strokeColor="#D4AF37"
+        android:strokeWidth="1.5"
+        android:pathData="M28,64 L52,64"/>
+</vector>
