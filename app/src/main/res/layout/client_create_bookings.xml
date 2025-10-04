@@ -1,0 +1,714 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp">
+
+        <!-- Header Section -->
+        <LinearLayout
+            android:id="@+id/headerSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Back"
+                app:tint="#D4AF37"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="KEY POLYGRAPH"
+                    android:textSize="16sp"
+                    android:textColor="#D4AF37"
+                    android:fontFamily="sans-serif-medium"
+                    android:letterSpacing="0.1"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="AND INVESTIGATIONS"
+                    android:textSize="11sp"
+                    android:textColor="#B8960F"
+                    android:fontFamily="sans-serif-light"
+                    android:letterSpacing="0.15"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Page Title Section -->
+        <LinearLayout
+            android:id="@+id/titleSection"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/headerSection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Book Session"
+                android:textSize="28sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="sans-serif-medium"/>
+
+            <View
+                android:layout_width="50dp"
+                android:layout_height="2dp"
+                android:background="#D4AF37"
+                android:layout_marginTop="12dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Schedule your polygraph examination"
+                android:textSize="13sp"
+                android:textColor="#999999"
+                android:layout_marginTop="12dp"/>
+        </LinearLayout>
+
+        <!-- Form Section Label -->
+        <TextView
+            android:id="@+id/formLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SESSION DETAILS"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:letterSpacing="0.2"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/titleSection"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"/>
+
+        <!-- Test Type Selector -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/testTypeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/formLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            app:boxStrokeColor="#D4AF37"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#E6D7A3"
+            app:boxBackgroundColor="#1A1A1A"
+            app:startIconDrawable="@drawable/ic_test_type"
+            app:startIconTint="#D4AF37"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="#D4AF37"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/testTypeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select Test Type"
+                android:inputType="none"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E6D7A3"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:minHeight="56dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Preferred Date -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/dateLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/testTypeLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            app:boxStrokeColor="#D4AF37"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#E6D7A3"
+            app:boxBackgroundColor="#1A1A1A"
+            app:startIconDrawable="@drawable/ic_calendar"
+            app:startIconTint="#D4AF37"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/dateInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Preferred Date"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E6D7A3"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:minHeight="56dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Preferred Time -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/timeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/dateLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            app:boxStrokeColor="#D4AF37"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#E6D7A3"
+            app:boxBackgroundColor="#1A1A1A"
+            app:startIconDrawable="@drawable/ic_time"
+            app:startIconTint="#D4AF37"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/timeInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Preferred Time"
+                android:inputType="none"
+                android:focusable="false"
+                android:clickable="true"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E6D7A3"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:minHeight="56dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Location Selector -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/locationLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/timeLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            app:boxStrokeColor="#D4AF37"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#E6D7A3"
+            app:boxBackgroundColor="#1A1A1A"
+            app:startIconDrawable="@drawable/ic_location"
+            app:startIconTint="#D4AF37"
+            app:endIconMode="dropdown_menu"
+            app:endIconTint="#D4AF37"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+
+            <AutoCompleteTextView
+                android:id="@+id/locationInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Select Location"
+                android:inputType="none"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E6D7A3"
+                android:paddingStart="8dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:minHeight="56dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Additional Notes Section Label -->
+        <TextView
+            android:id="@+id/notesLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ADDITIONAL INFORMATION"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:letterSpacing="0.2"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/locationLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"/>
+
+        <!-- Notes Input -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/notesLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/notesLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"
+            app:boxStrokeColor="#D4AF37"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#E6D7A3"
+            app:boxBackgroundColor="#1A1A1A"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/notesInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Any special requirements or notes"
+                android:inputType="textMultiLine"
+                android:minLines="4"
+                android:maxLines="6"
+                android:gravity="top|start"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E6D7A3"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="16dp"
+                android:paddingBottom="16dp"
+                android:minHeight="120dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Payment Section Label -->
+        <TextView
+            android:id="@+id/paymentLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PAYMENT DETAILS"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:letterSpacing="0.2"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/notesLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"/>
+
+        <!-- Pricing Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/pricingCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardBackgroundColor="#1A1A1A"
+            app:cardElevation="4dp"
+            app:cardCornerRadius="12dp"
+            app:layout_constraintTop_toBottomOf="@id/paymentLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="20dp">
+
+                <TextView
+                    android:id="@+id/sessionFeeLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Session Fee"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:id="@+id/sessionFeeAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R 2,500.00"
+                    android:textSize="18sp"
+                    android:textColor="#D4AF37"
+                    android:fontFamily="sans-serif-medium"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+                <View
+                    android:id="@+id/pricingDivider"
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:background="#333333"
+                    app:layout_constraintTop_toBottomOf="@id/sessionFeeLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/depositLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Deposit Required (30%)"
+                    android:textSize="14sp"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintTop_toBottomOf="@id/pricingDivider"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/depositAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R 750.00"
+                    android:textSize="20sp"
+                    android:textColor="#D4AF37"
+                    android:fontFamily="sans-serif-medium"
+                    app:layout_constraintTop_toBottomOf="@id/pricingDivider"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="16dp"/>
+
+                <TextView
+                    android:id="@+id/depositNote"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Remaining balance due before session"
+                    android:textSize="11sp"
+                    android:textColor="#999999"
+                    app:layout_constraintTop_toBottomOf="@id/depositLabel"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="4dp"/>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Payment Choice: Deposit / Full -->
+        <TextView
+            android:id="@+id/paymentChoiceLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CHOOSE PAYMENT OPTION"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:letterSpacing="0.2"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/pricingCard"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp"/>
+
+        <RadioGroup
+            android:id="@+id/paymentChoiceGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/paymentChoiceLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <RadioButton
+                android:id="@+id/depositRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pay 30% Deposit Now"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#D4AF37"
+                android:checked="true"/>
+
+            <RadioButton
+                android:id="@+id/fullRadio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pay Full Amount Now"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#D4AF37"
+                android:layout_marginTop="12dp"/>
+        </RadioGroup>
+
+        <!-- Payment Method Label -->
+        <TextView
+            android:id="@+id/paymentMethodLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SELECT PAYMENT METHOD"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:letterSpacing="0.2"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/paymentChoiceGroup"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="24dp"/>
+
+        <!-- Payment Options -->
+        <RadioGroup
+            android:id="@+id/paymentMethodGroup"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <!-- PayFast Option -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="#1A1A1A"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <RadioButton
+                        android:id="@+id/payfastRadio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#D4AF37"
+                        android:checked="true"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="PayFast"
+                            android:textSize="16sp"
+                            android:textColor="#FFFFFF"
+                            android:fontFamily="sans-serif-medium"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Instant EFT, Credit/Debit Card"
+                            android:textSize="12sp"
+                            android:textColor="#999999"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Ozow Option -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardBackgroundColor="#1A1A1A"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <RadioButton
+                        android:id="@+id/ozowRadio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#D4AF37"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ozow"
+                            android:textSize="16sp"
+                            android:textColor="#FFFFFF"
+                            android:fontFamily="sans-serif-medium"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Instant Bank Transfer"
+                            android:textSize="12sp"
+                            android:textColor="#999999"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Stripe Option -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="#1A1A1A"
+                app:cardElevation="2dp"
+                app:cardCornerRadius="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <RadioButton
+                        android:id="@+id/stripeRadio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#D4AF37"/>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Stripe"
+                            android:textSize="16sp"
+                            android:textColor="#FFFFFF"
+                            android:fontFamily="sans-serif-medium"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Credit/Debit Card, International"
+                            android:textSize="12sp"
+                            android:textColor="#999999"
+                            android:layout_marginTop="2dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </RadioGroup>
+
+        <!-- Info Card -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/infoCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="#1A1A1A"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="8dp"
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodGroup"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@drawable/ic_info"
+                    android:contentDescription="Info"
+                    app:tint="#D4AF37"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Secure payment. Receipt will be sent to your email immediately after payment."
+                    android:textSize="13sp"
+                    android:textColor="#CCCCCC"
+                    android:layout_marginStart="12dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Proceed to Payment Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/proceedButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:text="PROCEED TO PAYMENT (R 750.00)"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.1"
+            app:icon="@drawable/ic_payment"
+            app:iconTint="#000000"
+            app:backgroundTint="#D4AF37"
+            app:cornerRadius="8dp"
+            app:elevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/infoCard"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"/>
+
+        <!-- Cancel Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancelButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:text="CANCEL"
+            android:textSize="16sp"
+            android:textColor="#999999"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.1"
+            app:backgroundTint="#1A1A1A"
+            app:strokeColor="#333333"
+            app:strokeWidth="1dp"
+            app:cornerRadius="8dp"
+            app:layout_constraintTop_toBottomOf="@id/proceedButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <!-- Footer -->
+        <TextView
+            android:id="@+id/footerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Secure • Confidential • Professional"
+            android:textSize="11sp"
+            android:textColor="#666666"
+            android:letterSpacing="0.1"
+            android:fontFamily="sans-serif-light"
+            app:layout_constraintTop_toBottomOf="@id/cancelButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="32dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
