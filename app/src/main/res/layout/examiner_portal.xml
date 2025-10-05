@@ -197,76 +197,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Capture Test Outcomes Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/captureOutcomesCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardBackgroundColor="#1A1A1A"
-            app:cardElevation="8dp"
-            app:cardCornerRadius="12dp"
-            app:layout_constraintTop_toBottomOf="@id/manageAppointmentsCard"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?android:attr/selectableItemBackground">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="24dp">
-
-                <ImageView
-                    android:id="@+id/captureIcon"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/ic_capture"
-                    android:contentDescription="Capture Test Outcomes"
-                    app:tint="#D4AF37"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
-
-                <TextView
-                    android:id="@+id/captureTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Capture Test Outcomes"
-                    android:textSize="20sp"
-                    android:textColor="#FFFFFF"
-                    android:fontFamily="sans-serif-medium"
-                    app:layout_constraintTop_toTopOf="@id/captureIcon"
-                    app:layout_constraintStart_toEndOf="@id/captureIcon"
-                    app:layout_constraintEnd_toStartOf="@id/captureArrow"
-                    android:layout_marginStart="20dp"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="Record polygraph test results"
-                    android:textSize="13sp"
-                    android:textColor="#999999"
-                    app:layout_constraintTop_toBottomOf="@id/captureTitle"
-                    app:layout_constraintStart_toEndOf="@id/captureIcon"
-                    app:layout_constraintEnd_toStartOf="@id/captureArrow"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="4dp"/>
-
-                <ImageView
-                    android:id="@+id/captureArrow"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_arrow_forward"
-                    android:contentDescription="Navigate"
-                    app:tint="#D4AF37"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
-
         <!-- Past Tests Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/pastTestsCard"
@@ -276,7 +206,7 @@
             app:cardBackgroundColor="#1A1A1A"
             app:cardElevation="8dp"
             app:cardCornerRadius="12dp"
-            app:layout_constraintTop_toBottomOf="@id/captureOutcomesCard"
+            app:layout_constraintTop_toBottomOf="@id/manageAppointmentsCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:clickable="true"

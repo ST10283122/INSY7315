@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Download arrow -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M12,3v12l4,-4l1.41,1.41L12,18.83l-5.41,-5.42L8,11l4,4V3h0z"/>
+
+    <!-- Base/line at bottom -->
+    <path
+        android:fillColor="#D4AF37"
+        android:pathData="M5,19h14v2H5z"/>
+</vector>
