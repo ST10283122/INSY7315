@@ -25,10 +25,16 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # 3. Gives permission to the Gradle wrapper
+      # 3. Create local.properties file with dummy connection string
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+          echo 'DB_CONNECTION_STRING=Server=tcp:dummy.database.windows.net,1433;Initial Catalog=dummy;User ID=dummy;Password=dummy;' >> local.properties
+
+      # 4. Gives permission to the Gradle wrapper
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # 4. Executes the build command (and implicitly runs tests)
+      # 5. Executes the build command (and implicitly runs tests)
       - name: Build with Gradle
         run: ./gradlew build
