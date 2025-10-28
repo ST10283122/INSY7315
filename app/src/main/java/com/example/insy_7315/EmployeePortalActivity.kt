@@ -27,3 +27,4 @@ class EmployeePortalActivity : AppCompatActivity() {
         binding.userNameText.text = user?.fullName ?: "Guest"
     }
 }
+

@@ -62,51 +62,82 @@
                     android:letterSpacing="0.15"/>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/filterButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_filter"
-                android:contentDescription="Filter"
-                app:tint="#D4AF37"
-                android:padding="4dp"
-                android:clickable="true"
-                android:focusable="true"/>
         </LinearLayout>
 
-        <!-- Page Title Section -->
-        <LinearLayout
-            android:id="@+id/titleSection"
-            android:layout_width="0dp"
+        <!-- Page Title -->
+        <TextView
+            android:id="@+id/pageTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:text="My Bookings"
+            android:textSize="28sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-medium"
             app:layout_constraintTop_toBottomOf="@id/headerSection"
             app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"/>
+
+        <TextView
+            android:id="@+id/pageSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Manage your scheduled sessions"
+            android:textSize="14sp"
+            android:textColor="#999999"
+            android:fontFamily="sans-serif-light"
+            app:layout_constraintTop_toBottomOf="@id/pageTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/searchLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/pageSubtitle"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="32dp">
+            android:layout_marginTop="32dp"
+            app:boxStrokeColor="#D4AF37"
+            app:boxStrokeWidth="1dp"
+            app:hintTextColor="#B8960F"
+            app:boxBackgroundColor="#1A1A1A"
+            app:startIconDrawable="@drawable/ic_search"
+            app:startIconTint="#D4AF37"
+            app:endIconMode="clear_text"
+            app:endIconTint="#D4AF37"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchInput"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="My Bookings"
-                android:textSize="28sp"
+                android:hint="Search bookings by ID, type or date"
+                android:inputType="text"
                 android:textColor="#FFFFFF"
-                android:fontFamily="sans-serif-medium"/>
+                android:textColorHint="#666666"
+                android:padding="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
-            <View
-                android:layout_width="50dp"
-                android:layout_height="2dp"
-                android:background="#D4AF37"
-                android:layout_marginTop="12dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Manage your scheduled sessions"
-                android:textSize="13sp"
-                android:textColor="#999999"
-                android:layout_marginTop="12dp"/>
-        </LinearLayout>
+        <!-- Add Booking Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/addBookingButton"
+            android:layout_width="0dp"
+            android:layout_height="56dp"
+            android:text="NEW BOOKING REQUEST"
+            android:textSize="16sp"
+            android:textColor="#000000"
+            android:fontFamily="sans-serif-medium"
+            android:letterSpacing="0.1"
+            app:icon="@drawable/ic_add"
+            app:iconTint="#000000"
+            app:backgroundTint="#D4AF37"
+            app:cornerRadius="8dp"
+            app:elevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/searchLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"/>
 
         <!-- Bookings List -->
         <LinearLayout
@@ -114,7 +145,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/titleSection"
+            app:layout_constraintTop_toBottomOf="@id/addBookingButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp">
