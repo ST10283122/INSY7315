@@ -727,6 +727,30 @@ object DatabaseHelper {
         }
     }
 
+    suspend fun getBookingsByEmployee(employeeId: Int): Result<List<Booking>> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("bookings/employee/$employeeId", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val bookingsArray = json.getJSONArray("bookings")
+                    val bookings = mutableListOf<Booking>()
+
+                    for (i in 0 until bookingsArray.length()) {
+                        val bookingJson = bookingsArray.getJSONObject(i)
+                        bookings.add(parseBooking(bookingJson))
+                    }
+
+                    Result.success(bookings)
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get employee bookings failed", e)
+            Result.failure(e)
+        }
+    }
+
     suspend fun getPaymentsByBooking(bookingId: Int): Result<List<Payment>> = withContext(Dispatchers.IO) {
         try {
             val result = makeRequest("payments/booking/$bookingId", "GET")
