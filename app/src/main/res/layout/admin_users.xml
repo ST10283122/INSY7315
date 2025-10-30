@@ -170,17 +170,17 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="EXAMINERS"
+                        android:text="EMPLOYEES"
                         android:textSize="11sp"
                         android:textColor="#999999"
                         android:letterSpacing="0.1"
                         android:fontFamily="sans-serif-medium"/>
 
                     <TextView
-                        android:id="@+id/examinerCount"
+                        android:id="@+id/employeeCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="12"
+                        android:text="0"
                         android:textSize="32sp"
                         android:textColor="#D4AF37"
                         android:fontFamily="sans-serif-medium"
@@ -217,7 +217,7 @@
                         android:id="@+id/clientCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="148"
+                        android:text="0"
                         android:textSize="32sp"
                         android:textColor="#D4AF37"
                         android:fontFamily="sans-serif-medium"
@@ -226,12 +226,12 @@
             </androidx.cardview.widget.CardView>
         </LinearLayout>
 
-        <!-- Examiners Section -->
+        <!-- Employees Section -->
         <TextView
-            android:id="@+id/examinersLabel"
+            android:id="@+id/employeesLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="EXAMINERS"
+            android:text="EMPLOYEES"
             android:textSize="12sp"
             android:textColor="#999999"
             android:letterSpacing="0.2"
@@ -241,264 +241,23 @@
             android:layout_marginTop="32dp"/>
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/examinersCard"
+            android:id="@+id/employeesCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             app:cardBackgroundColor="#1A1A1A"
             app:cardElevation="4dp"
             app:cardCornerRadius="12dp"
-            app:layout_constraintTop_toBottomOf="@id/examinersLabel"
+            app:layout_constraintTop_toBottomOf="@id/employeesLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
+                android:id="@+id/employeesList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"/>
 
-                <!-- Examiner Item 1 -->
-                <LinearLayout
-                    android:id="@+id/examiner1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Dr. Sarah Johnson"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="sarah.johnson@keypolygraph.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 82 123 4567"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ACTIVE"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#4CAF50"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <!-- Examiner Item 2 -->
-                <LinearLayout
-                    android:id="@+id/examiner2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Michael Chen"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="michael.chen@keypolygraph.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 83 234 5678"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ACTIVE"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#4CAF50"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <!-- Examiner Item 3 -->
-                <LinearLayout
-                    android:id="@+id/examiner3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Dr. Patricia Williams"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="patricia.w@keypolygraph.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 84 345 6789"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="INACTIVE"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#999999"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
         </androidx.cardview.widget.CardView>
 
         <!-- Clients Section -->
@@ -511,7 +270,7 @@
             android:textColor="#999999"
             android:letterSpacing="0.2"
             android:fontFamily="sans-serif-medium"
-            app:layout_constraintTop_toBottomOf="@id/examinersCard"
+            app:layout_constraintTop_toBottomOf="@id/employeesCard"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="32dp"/>
 
@@ -528,438 +287,12 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <LinearLayout
+                android:id="@+id/clientsList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"/>
 
-                <!-- Client Item 1 -->
-                <LinearLayout
-                    android:id="@+id/client1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="John Doe"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="john.doe@email.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 81 456 7890"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ACTIVE"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#4CAF50"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <!-- Client Item 2 -->
-                <LinearLayout
-                    android:id="@+id/client2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Jane Smith"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="jane.smith@email.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 82 567 8901"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ACTIVE"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#4CAF50"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <!-- Client Item 3 -->
-                <LinearLayout
-                    android:id="@+id/client3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Robert Anderson"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="robert.a@email.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 83 678 9012"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ACTIVE"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#4CAF50"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <!-- Client Item 4 -->
-                <LinearLayout
-                    android:id="@+id/client4"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Emily Davis"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="emily.davis@email.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 84 789 0123"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="SUSPENDED"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#FFA726"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#333333"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="16dp"/>
-
-                <!-- Client Item 5 -->
-                <LinearLayout
-                    android:id="@+id/client5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="16dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:background="?attr/selectableItemBackground">
-
-                    <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:src="@drawable/ic_person"
-                        android:background="@drawable/circle_background"
-                        android:backgroundTint="#2A2A2A"
-                        app:tint="#D4AF37"
-                        android:padding="12dp"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="16dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="David Martinez"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="david.m@email.com"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="+27 85 890 1234"
-                            android:textSize="13sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:gravity="end">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="ACTIVE"
-                            android:textSize="10sp"
-                            android:textColor="#000000"
-                            android:background="#4CAF50"
-                            android:paddingStart="8dp"
-                            android:paddingEnd="8dp"
-                            android:paddingTop="4dp"
-                            android:paddingBottom="4dp"
-                            android:fontFamily="sans-serif-medium"
-                            android:letterSpacing="0.1"/>
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-        <!-- Load More Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/loadMoreButton"
-            android:layout_width="0dp"
-            android:layout_height="56dp"
-            android:text="LOAD MORE CLIENTS"
-            android:textSize="16sp"
-            android:textColor="#D4AF37"
-            android:fontFamily="sans-serif-medium"
-            android:letterSpacing="0.1"
-            app:iconTint="#D4AF37"
-            app:backgroundTint="#2A2A2A"
-            app:strokeColor="#D4AF37"
-            app:strokeWidth="1dp"
-            app:cornerRadius="8dp"
-            app:layout_constraintTop_toBottomOf="@id/clientsCard"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"/>
 
         <!-- Footer -->
         <TextView
@@ -971,7 +304,7 @@
             android:textColor="#666666"
             android:letterSpacing="0.1"
             android:fontFamily="sans-serif-light"
-            app:layout_constraintTop_toBottomOf="@id/loadMoreButton"
+            app:layout_constraintTop_toBottomOf="@id/clientsCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="40dp"/>

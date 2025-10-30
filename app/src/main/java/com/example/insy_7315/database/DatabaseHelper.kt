@@ -68,6 +68,7 @@ object DatabaseHelper {
         specialization: String? = null
     ): Result<User> = withContext(Dispatchers.IO) {
         try {
+            // Build JSON body dynamically
             val body = JSONObject().apply {
                 put("fullName", fullName)
                 put("email", email)
@@ -75,6 +76,12 @@ object DatabaseHelper {
                 put("password", passwordHash)
                 put("userRole", userRole)
                 put("termsAccepted", termsAccepted)
+
+                // Only include optional fields if non-null
+                address?.let { put("address", it) }
+                certification?.let { put("certification", it) }
+                licenseNumber?.let { put("licenseNumber", it) }
+                specialization?.let { put("specialization", it) }
             }
 
             val result = makeRequest("register", "POST", body)
@@ -82,19 +89,22 @@ object DatabaseHelper {
             result.fold(
                 onSuccess = { json ->
                     val userJson = json.getJSONObject("user")
-                    Result.success(User(
-                        userId = userJson.getInt("UserID"),
-                        fullName = userJson.getString("FullName"),
-                        email = userJson.getString("Email"),
-                        phone = userJson.optString("Phone", null),
-                        userRole = userJson.getString("UserRole"),
-                        termsAccepted = null,
-                        address = null,
-                        certification = null,
-                        licenseNumber = null,
-                        specialization = null,
-                        accountStatus = userJson.getString("AccountStatus")
-                    ))
+
+                    Result.success(
+                        User(
+                            userId = userJson.getInt("UserID"),
+                            fullName = userJson.getString("FullName"),
+                            email = userJson.getString("Email"),
+                            phone = userJson.optString("Phone", null),
+                            userRole = userJson.getString("UserRole"),
+                            termsAccepted = userJson.optBoolean("TermsAccepted"),
+                            address = userJson.optString("Address", null),
+                            certification = userJson.optString("Certification", null),
+                            licenseNumber = userJson.optString("LicenseNumber", null),
+                            specialization = userJson.optString("Specialization", null),
+                            accountStatus = userJson.getString("AccountStatus")
+                        )
+                    )
                 },
                 onFailure = { error -> Result.failure(error) }
             )
@@ -163,6 +173,133 @@ object DatabaseHelper {
             )
         } catch (e: Exception) {
             Log.e(TAG, "Get user failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getAllUsers(): Result<List<User>> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("users", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val usersArray = json.getJSONArray("users")
+                    val users = mutableListOf<User>()
+
+                    for (i in 0 until usersArray.length()) {
+                        val userJson = usersArray.getJSONObject(i)
+                        users.add(User(
+                            userId = userJson.getInt("UserID"),
+                            fullName = userJson.getString("FullName"),
+                            email = userJson.getString("Email"),
+                            phone = userJson.optString("Phone", null),
+                            userRole = userJson.getString("UserRole"),
+                            termsAccepted = userJson.optBoolean("TermsAccepted"),
+                            address = userJson.optString("Address", null),
+                            certification = userJson.optString("Certification", null),
+                            licenseNumber = userJson.optString("LicenseNumber", null),
+                            specialization = userJson.optString("Specialization", null),
+                            accountStatus = userJson.getString("AccountStatus")
+                        ))
+                    }
+
+                    Result.success(users)
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get all users failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateUser(
+        userId: Int,
+        fullName: String? = null,
+        email: String? = null,
+        phone: String? = null,
+        address: String? = null,
+        certification: String? = null,
+        licenseNumber: String? = null,
+        specialization: String? = null,
+        userRole: String? = null,
+        accountStatus: String? = null
+    ): Result<User> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                fullName?.let { put("fullName", it) }
+                email?.let { put("email", it) }
+                phone?.let { put("phone", it) }
+                address?.let { put("address", it) }
+                certification?.let { put("certification", it) }
+                licenseNumber?.let { put("licenseNumber", it) }
+                specialization?.let { put("specialization", it) }
+                userRole?.let { put("userRole", it) }
+                accountStatus?.let { put("accountStatus", it) }
+            }
+
+            val result = makeRequest("users/$userId", "PATCH", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val userJson = json.getJSONObject("user")
+                    Result.success(User(
+                        userId = userJson.getInt("UserID"),
+                        fullName = userJson.getString("FullName"),
+                        email = userJson.getString("Email"),
+                        phone = userJson.optString("Phone", null),
+                        userRole = userJson.getString("UserRole"),
+                        termsAccepted = userJson.optBoolean("TermsAccepted"),
+                        address = userJson.optString("Address", null),
+                        certification = userJson.optString("Certification", null),
+                        licenseNumber = userJson.optString("LicenseNumber", null),
+                        specialization = userJson.optString("Specialization", null),
+                        accountStatus = userJson.getString("AccountStatus")
+                    ))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Update user failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun resetUserPassword(
+        userId: Int,
+        newPassword: String
+    ): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("newPassword", newPassword)
+            }
+
+            val result = makeRequest("users/$userId/reset-password", "PATCH", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    Result.success(json.getString("message"))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Reset password failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteUser(userId: Int): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("users/$userId", "DELETE")
+
+            result.fold(
+                onSuccess = { json ->
+                    Result.success(json.getString("message"))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Delete user failed", e)
             Result.failure(e)
         }
     }
@@ -357,6 +494,62 @@ object DatabaseHelper {
             Result.failure(e)
         }
     }
+    // Add this function to DatabaseHelper.kt
+
+    suspend fun getAllBookings(): Result<List<Booking>> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("bookings/all", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val bookingsArray = json.getJSONArray("bookings")
+                    val bookings = mutableListOf<Booking>()
+
+                    for (i in 0 until bookingsArray.length()) {
+                        val bookingJson = bookingsArray.getJSONObject(i)
+                        bookings.add(parseBooking(bookingJson))
+                    }
+
+                    Result.success(bookings)
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get all bookings failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun assignEmployeeToBooking(
+        bookingId: Int,
+        employeeId: Int,
+        actualDate: String,
+        actualTime: String,
+        updatedBy: Int
+    ): Result<Booking> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("employeeId", employeeId)
+                put("actualDate", actualDate)
+                put("actualTime", actualTime)
+                put("updatedBy", updatedBy)
+            }
+
+            val result = makeRequest("bookings/$bookingId/assign", "PATCH", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val bookingJson = json.getJSONObject("booking")
+                    Result.success(parseBooking(bookingJson))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Assign employee failed", e)
+            Result.failure(e)
+        }
+    }
+
 
     // ============= INVOICES FUNCTIONS =============
 
@@ -443,6 +636,28 @@ object DatabaseHelper {
             )
         } catch (e: Exception) {
             Log.e(TAG, "Get invoices failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getInvoiceBalance(invoiceId: Int): Result<InvoiceBalance> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("invoices/$invoiceId/balance", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val balanceJson = json.getJSONObject("balance")
+                    Result.success(InvoiceBalance(
+                        invoiceId = balanceJson.getInt("InvoiceID"),
+                        totalAmount = balanceJson.getDouble("TotalAmount"),
+                        amountPaid = balanceJson.getDouble("AmountPaid"),
+                        balance = balanceJson.getDouble("Balance")
+                    ))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get invoice balance failed", e)
             Result.failure(e)
         }
     }
@@ -543,7 +758,7 @@ object DatabaseHelper {
             bookingId = json.getInt("BookingID"),
             bookingReference = json.getString("BookingReference"),
             clientId = json.getInt("ClientID"),
-            employeeId = json.optInt("EmployeeID"),
+            employeeId = json.optInt("EmployeeID").takeIf { it != 0 },
             testTypeId = json.getInt("TestTypeID"),
             testName = json.optString("TestName", null),
             preferredDate = json.getString("PreferredDate"),
@@ -555,7 +770,8 @@ object DatabaseHelper {
             bookingStatus = json.getString("BookingStatus"),
             sessionFee = json.getDouble("SessionFee"),
             depositRequired = json.getDouble("DepositRequired"),
-            employeeName = json.optString("EmployeeName", null)
+            employeeName = json.optString("EmployeeName", null),
+            clientName = json.optString("ClientName", null)
         )
     }
 

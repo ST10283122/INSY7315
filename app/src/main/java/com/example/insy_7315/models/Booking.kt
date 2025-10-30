@@ -18,5 +18,6 @@ data class Booking(
     val bookingStatus: String,
     val sessionFee: Double,
     val depositRequired: Double,
-    val employeeName: String?
+    val employeeName: String?,
+    val clientName: String? = null
 ) : Serializable

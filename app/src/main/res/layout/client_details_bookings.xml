@@ -187,6 +187,7 @@
                             android:textColor="#999999"/>
 
                         <TextView
+                            android:id="@+id/testTypeValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Pre-Employment Screening"
@@ -233,6 +234,7 @@
                             android:textColor="#999999"/>
 
                         <TextView
+                            android:id="@+id/dateTimeValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="October 15, 2024 at 10:00 AM"
@@ -279,6 +281,7 @@
                             android:textColor="#999999"/>
 
                         <TextView
+                            android:id="@+id/locationValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Johannesburg Office"
@@ -288,9 +291,10 @@
                             android:layout_marginTop="4dp"/>
 
                         <TextView
+                            android:id="@+id/locationAddress"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="123 Business Street, Sandton, 2196"
+                            android:text="Contact office for detailed directions"
                             android:textSize="13sp"
                             android:textColor="#999999"
                             android:layout_marginTop="4dp"/>
@@ -332,6 +336,7 @@
                             android:textColor="#999999"/>
 
                         <TextView
+                            android:id="@+id/examinerValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Dr. Sarah Johnson"
@@ -341,9 +346,10 @@
                             android:layout_marginTop="4dp"/>
 
                         <TextView
+                            android:id="@+id/examinerDetails"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Certified Polygraph Examiner | 15 years exp."
+                            android:text="Certified Polygraph Examiner"
                             android:textSize="13sp"
                             android:textColor="#999999"
                             android:layout_marginTop="4dp"/>
@@ -415,6 +421,7 @@
                             android:textColor="#999999"/>
 
                         <TextView
+                            android:id="@+id/paymentStatusValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Deposit Paid"
@@ -425,6 +432,7 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/paymentStatusBadge"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="DEPOSIT PAID"
@@ -466,6 +474,7 @@
                             android:textColor="#CCCCCC"/>
 
                         <TextView
+                            android:id="@+id/sessionFeeValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="R 2,500.00"
@@ -484,11 +493,12 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Deposit Paid (30%)"
+                            android:text="Amount Paid"
                             android:textSize="14sp"
                             android:textColor="#CCCCCC"/>
 
                         <TextView
+                            android:id="@+id/depositPaidValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="- R 750.00"
@@ -519,6 +529,7 @@
                             android:fontFamily="sans-serif-medium"/>
 
                         <TextView
+                            android:id="@+id/balanceDueValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="R 1,750.00"
@@ -579,9 +590,10 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <TextView
+                android:id="@+id/notesText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Please bring a valid ID and arrive 15 minutes early for registration. Avoid caffeine 2 hours before the test."
+                android:text="Please bring a valid ID and arrive 15 minutes early for registration."
                 android:textSize="14sp"
                 android:textColor="#CCCCCC"
                 android:lineSpacingExtra="4dp"

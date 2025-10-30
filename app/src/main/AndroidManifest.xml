@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -47,6 +47,38 @@
 
         <activity
             android:name=".AdminPortalActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ClientBookingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ClientCreateBookingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BookingDetailsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ClientPaymentsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminCreateUserActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminUserDetailsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminUsersActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AdminCasesActivity"
             android:exported="false" />
 
     </application>
