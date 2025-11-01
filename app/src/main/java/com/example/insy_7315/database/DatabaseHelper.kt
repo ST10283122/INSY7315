@@ -494,7 +494,6 @@ object DatabaseHelper {
             Result.failure(e)
         }
     }
-    // Add this function to DatabaseHelper.kt
 
     suspend fun getAllBookings(): Result<List<Booking>> = withContext(Dispatchers.IO) {
         try {
@@ -550,6 +549,29 @@ object DatabaseHelper {
         }
     }
 
+    suspend fun getBookingsByEmployee(employeeId: Int): Result<List<Booking>> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("bookings/employee/$employeeId", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val bookingsArray = json.getJSONArray("bookings")
+                    val bookings = mutableListOf<Booking>()
+
+                    for (i in 0 until bookingsArray.length()) {
+                        val bookingJson = bookingsArray.getJSONObject(i)
+                        bookings.add(parseBooking(bookingJson))
+                    }
+
+                    Result.success(bookings)
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get employee bookings failed", e)
+            Result.failure(e)
+        }
+    }
 
     // ============= INVOICES FUNCTIONS =============
 
@@ -727,30 +749,6 @@ object DatabaseHelper {
         }
     }
 
-    suspend fun getBookingsByEmployee(employeeId: Int): Result<List<Booking>> = withContext(Dispatchers.IO) {
-        try {
-            val result = makeRequest("bookings/employee/$employeeId", "GET")
-
-            result.fold(
-                onSuccess = { json ->
-                    val bookingsArray = json.getJSONArray("bookings")
-                    val bookings = mutableListOf<Booking>()
-
-                    for (i in 0 until bookingsArray.length()) {
-                        val bookingJson = bookingsArray.getJSONObject(i)
-                        bookings.add(parseBooking(bookingJson))
-                    }
-
-                    Result.success(bookings)
-                },
-                onFailure = { error -> Result.failure(error) }
-            )
-        } catch (e: Exception) {
-            Log.e(TAG, "Get employee bookings failed", e)
-            Result.failure(e)
-        }
-    }
-
     suspend fun getPaymentsByBooking(bookingId: Int): Result<List<Payment>> = withContext(Dispatchers.IO) {
         try {
             val result = makeRequest("payments/booking/$bookingId", "GET")
@@ -771,6 +769,314 @@ object DatabaseHelper {
             )
         } catch (e: Exception) {
             Log.e(TAG, "Get payments failed", e)
+            Result.failure(e)
+        }
+    }
+
+    // ============= TESTS FUNCTIONS =============
+
+    suspend fun createTest(
+        bookingId: Int,
+        clientId: Int,
+        employeeId: Int,
+        testTypeId: Int,
+        testDate: String,
+        testTime: String,
+        testLocation: String?,
+        examineeName: String,
+        examineeDetails: String?,
+        examinerName: String,
+        examinerEmail: String,
+        examinerPhone: String?,
+        resultSummary: String,
+        testOutcome: String,
+        internalNotes: String?,
+        createdBy: Int
+    ): Result<Test> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("bookingId", bookingId)
+                put("clientId", clientId)
+                put("employeeId", employeeId)
+                put("testTypeId", testTypeId)
+                put("testDate", testDate)
+                put("testTime", testTime)
+                put("testLocation", testLocation)
+                put("examineeName", examineeName)
+                put("examineeDetails", examineeDetails)
+                put("examinerName", examinerName)
+                put("examinerEmail", examinerEmail)
+                put("examinerPhone", examinerPhone)
+                put("resultSummary", resultSummary)
+                put("testOutcome", testOutcome)
+                put("internalNotes", internalNotes)
+                put("createdBy", createdBy)
+            }
+
+            val result = makeRequest("tests", "POST", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val testJson = json.getJSONObject("test")
+                    Result.success(parseTest(testJson))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Create test failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getTestById(testId: Int): Result<Test> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("tests/$testId", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val testJson = json.getJSONObject("test")
+                    Result.success(parseTest(testJson))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get test failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getAllTests(): Result<List<Test>> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("tests", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val testsArray = json.getJSONArray("tests")
+                    val tests = mutableListOf<Test>()
+
+                    for (i in 0 until testsArray.length()) {
+                        val testJson = testsArray.getJSONObject(i)
+                        tests.add(parseTest(testJson))
+                    }
+
+                    Result.success(tests)
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get all tests failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getTestByBooking(bookingId: Int): Result<Test> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("tests/booking/$bookingId", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val testJson = json.getJSONObject("test")
+                    Result.success(parseTest(testJson))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get test by booking failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getTestsByClient(clientId: Int): Result<List<Test>> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("tests/client/$clientId", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val testsArray = json.getJSONArray("tests")
+                    val tests = mutableListOf<Test>()
+
+                    for (i in 0 until testsArray.length()) {
+                        val testJson = testsArray.getJSONObject(i)
+                        tests.add(parseTest(testJson))
+                    }
+
+                    Result.success(tests)
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get client tests failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getTestsByEmployee(employeeId: Int): Result<List<Test>> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("tests/employee/$employeeId", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val testsArray = json.getJSONArray("tests")
+                    val tests = mutableListOf<Test>()
+
+                    for (i in 0 until testsArray.length()) {
+                        val testJson = testsArray.getJSONObject(i)
+                        tests.add(parseTest(testJson))
+                    }
+
+                    Result.success(tests)
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get employee tests failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun updateTest(
+        testId: Int,
+        testDate: String? = null,
+        testTime: String? = null,
+        testLocation: String? = null,
+        examineeName: String? = null,
+        examineeDetails: String? = null,
+        examinerName: String? = null,
+        examinerEmail: String? = null,
+        examinerPhone: String? = null,
+        resultSummary: String? = null,
+        testOutcome: String? = null,
+        testStatus: String? = null,
+        internalNotes: String? = null,
+        updatedBy: Int? = null
+    ): Result<Test> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                testDate?.let { put("testDate", it) }
+                testTime?.let { put("testTime", it) }
+                testLocation?.let { put("testLocation", it) }
+                examineeName?.let { put("examineeName", it) }
+                examineeDetails?.let { put("examineeDetails", it) }
+                examinerName?.let { put("examinerName", it) }
+                examinerEmail?.let { put("examinerEmail", it) }
+                examinerPhone?.let { put("examinerPhone", it) }
+                resultSummary?.let { put("resultSummary", it) }
+                testOutcome?.let { put("testOutcome", it) }
+                testStatus?.let { put("testStatus", it) }
+                internalNotes?.let { put("internalNotes", it) }
+                updatedBy?.let { put("updatedBy", it) }
+            }
+
+            val result = makeRequest("tests/$testId", "PATCH", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val testJson = json.getJSONObject("test")
+                    Result.success(parseTest(testJson))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Update test failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun completeTest(
+        testId: Int,
+        updatedBy: Int
+    ): Result<Test> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("updatedBy", updatedBy)
+            }
+
+            val result = makeRequest("tests/$testId/complete", "PATCH", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val testJson = json.getJSONObject("test")
+                    Result.success(parseTest(testJson))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Complete test failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun releaseTest(
+        testId: Int,
+        releasedBy: Int
+    ): Result<Test> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("releasedBy", releasedBy)
+            }
+
+            val result = makeRequest("tests/$testId/release", "PATCH", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val testJson = json.getJSONObject("test")
+                    Result.success(parseTest(testJson))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Release test failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun getTestReport(testId: Int): Result<TestReport> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("tests/$testId/report", "GET")
+
+            result.fold(
+                onSuccess = { json ->
+                    val reportJson = json.getJSONObject("report")
+                    Result.success(TestReport(
+                        testId = reportJson.getInt("TestID"),
+                        testDate = reportJson.getString("TestDate"),
+                        testTime = reportJson.getString("TestTime"),
+                        testLocation = reportJson.optString("TestLocation", null),
+                        examineeName = reportJson.getString("ExamineeName"),
+                        examineeDetails = reportJson.optString("ExamineeDetails", null),
+                        examinerName = reportJson.getString("ExaminerName"),
+                        examinerEmail = reportJson.getString("ExaminerEmail"),
+                        examinerPhone = reportJson.optString("ExaminerPhone", null),
+                        resultSummary = reportJson.getString("ResultSummary"),
+                        testOutcome = reportJson.getString("TestOutcome"),
+                        testStatus = reportJson.getString("TestStatus"),
+                        completedAt = reportJson.optString("CompletedAt", null),
+                        releasedAt = reportJson.optString("ReleasedAt", null),
+                        testName = reportJson.getString("TestName"),
+                        testDescription = reportJson.optString("TestDescription", null),
+                        bookingReference = reportJson.getString("BookingReference")
+                    ))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Get test report failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun deleteTest(testId: Int): Result<String> = withContext(Dispatchers.IO) {
+        try {
+            val result = makeRequest("tests/$testId", "DELETE")
+
+            result.fold(
+                onSuccess = { json ->
+                    Result.success(json.getString("message"))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Delete test failed", e)
             Result.failure(e)
         }
     }
@@ -826,6 +1132,36 @@ object DatabaseHelper {
             paymentStatus = json.getString("PaymentStatus"),
             paymentDate = json.getString("PaymentDate"),
             transactionId = json.optString("TransactionID", null)
+        )
+    }
+
+    private fun parseTest(json: JSONObject): Test {
+        return Test(
+            testId = json.getInt("TestID"),
+            bookingId = json.getInt("BookingID"),
+            clientId = json.getInt("ClientID"),
+            employeeId = json.getInt("EmployeeID"),
+            testTypeId = json.getInt("TestTypeID"),
+            testDate = json.getString("TestDate"),
+            testTime = json.getString("TestTime"),
+            testLocation = json.optString("TestLocation", null),
+            examineeName = json.getString("ExamineeName"),
+            examineeDetails = json.optString("ExamineeDetails", null),
+            examinerName = json.getString("ExaminerName"),
+            examinerEmail = json.getString("ExaminerEmail"),
+            examinerPhone = json.optString("ExaminerPhone", null),
+            resultSummary = json.getString("ResultSummary"),
+            testOutcome = json.getString("TestOutcome"),
+            testStatus = json.getString("TestStatus"),
+            completedAt = json.optString("CompletedAt", null),
+            releasedAt = json.optString("ReleasedAt", null),
+            internalNotes = json.optString("InternalNotes", null),
+            createdAt = json.getString("CreatedAt"),
+            updatedAt = json.getString("UpdatedAt"),
+            bookingReference = json.optString("BookingReference", null),
+            clientName = json.optString("ClientName", null),
+            employeeName = json.optString("EmployeeName", null),
+            testName = json.optString("TestName", null)
         )
     }
 }
