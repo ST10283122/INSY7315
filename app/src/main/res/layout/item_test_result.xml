@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="#1A1A1A"
+    app:cardElevation="4dp"
+    app:cardCornerRadius="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <!-- PDF Icon -->
+        <ImageView
+            android:id="@+id/pdfIcon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@drawable/ic_test_type"
+            android:contentDescription="Test"
+            app:tint="#D4AF37"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <!-- Test ID -->
+        <TextView
+            android:id="@+id/testIdText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Test ID"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:fontFamily="sans-serif-light"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/pdfIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"/>
+
+        <!-- Client Name -->
+        <TextView
+            android:id="@+id/clientNameText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Client Name"
+            android:textSize="18sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/testIdText"
+            app:layout_constraintStart_toEndOf="@id/pdfIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"/>
+
+        <!-- Test Type -->
+        <TextView
+            android:id="@+id/testTypeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Test Type"
+            android:textSize="13sp"
+            android:textColor="#999999"
+            app:layout_constraintTop_toBottomOf="@id/clientNameText"
+            app:layout_constraintStart_toEndOf="@id/pdfIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="2dp"/>
+
+        <!-- Test Outcome Badge -->
+        <TextView
+            android:id="@+id/outcomeBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PASS"
+            android:textSize="10sp"
+            android:textColor="#000000"
+            android:fontFamily="sans-serif-medium"
+            android:background="@drawable/badge_background"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            app:layout_constraintTop_toBottomOf="@id/testTypeText"
+            app:layout_constraintStart_toEndOf="@id/pdfIcon"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Divider -->
+        <View
+            android:id="@+id/divider"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="#333333"
+            app:layout_constraintTop_toBottomOf="@id/outcomeBadge"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Info Row -->
+        <LinearLayout
+            android:id="@+id/infoRow"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="DATE"
+                    android:textSize="10sp"
+                    android:textColor="#999999"
+                    android:letterSpacing="0.1"/>
+
+                <TextView
+                    android:id="@+id/testDateText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textSize="13sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="LOCATION"
+                    android:textSize="10sp"
+                    android:textColor="#999999"
+                    android:letterSpacing="0.1"/>
+
+                <TextView
+                    android:id="@+id/locationText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Location"
+                    android:textSize="13sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="STATUS"
+                    android:textSize="10sp"
+                    android:textColor="#999999"
+                    android:letterSpacing="0.1"/>
+
+                <TextView
+                    android:id="@+id/statusText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Status"
+                    android:textSize="13sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="sans-serif-medium"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Download Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/downloadPdfBtn"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:text="DOWNLOAD PDF"
+            android:textSize="14sp"
+            android:textColor="#000000"
+            android:fontFamily="sans-serif-medium"
+            app:backgroundTint="#D4AF37"
+            app:cornerRadius="8dp"
+            app:layout_constraintTop_toBottomOf="@id/infoRow"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

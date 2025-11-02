@@ -36,9 +36,22 @@ class ClientPortalActivity : AppCompatActivity() {
             startActivity(Intent(this, ClientBookingsActivity::class.java))
         }
 
-        // Test History
+        // In ClientDashboardActivity or ClientPortalActivity
         binding.testHistoryCard.setOnClickListener {
-            Toast.makeText(this, "Test History - Coming Soon", Toast.LENGTH_SHORT).show()
+            val user = sessionManager.getUser()
+            if (user != null) {
+                val intent = Intent(this, ClientTestsActivity::class.java).apply {
+                    putExtra("USER_ID", user.userId)
+                    putExtra("USER_NAME", user.fullName)
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    this,
+                    "Session expired. Please login again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         binding.paymentHistoryCard.setOnClickListener {

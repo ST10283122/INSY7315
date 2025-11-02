@@ -78,6 +78,18 @@
             android:exported="false" />
 
         <activity
+            android:name=".ClientTestsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".EmployeeTestDetailsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".EmployeeHistoryActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".EmployeeBookingsActivity"
             android:exported="false" />
 

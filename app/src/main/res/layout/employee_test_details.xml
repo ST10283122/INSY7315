@@ -35,7 +35,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Polygraph Session Details"
+                android:text="Test Details"
                 android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:fontFamily="sans-serif-medium"
@@ -61,135 +61,82 @@
                 android:orientation="vertical"
                 android:padding="20dp">
 
-                <!-- Session Metadata Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Session Metadata"
+                    android:text="Session Information"
                     android:textColor="#D4AF37"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
 
                 <TextView
+                    android:id="@+id/bookingReference"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Booking ID: BK-2024-1047"
+                    android:text="Booking ID: Loading..."
                     android:textColor="#999999"
                     android:textSize="12sp"
                     android:layout_marginTop="8dp"/>
 
                 <TextView
+                    android:id="@+id/examinerInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Examiner: Dr. Sarah Johnson (EX-2024-089)"
+                    android:text="Examiner: Loading..."
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
 
                 <TextView
+                    android:id="@+id/clientInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Client: John Doe"
+                    android:text="Client: Loading..."
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
 
                 <TextView
+                    android:id="@+id/testTypeInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Test Type: Pre-Employment Screening"
+                    android:text="Test Type: Loading..."
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
 
                 <TextView
+                    android:id="@+id/scheduledDateTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Scheduled: Oct 15, 2024 • 10:00 AM"
+                    android:text="Scheduled: Loading..."
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
 
                 <TextView
+                    android:id="@+id/locationInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Location: Johannesburg"
+                    android:text="Location: Loading..."
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
 
                 <TextView
+                    android:id="@+id/paymentStatusInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Payment Status: DEPOSIT PAID"
+                    android:text="Payment Status: Loading..."
                     android:textColor="#FFA726"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
-
-                <!-- Actual Session Times -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp">
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="Start Time"
-                        android:textColorHint="#666666"
-                        app:boxBackgroundColor="#2A2A2A"
-                        app:boxStrokeColor="#D4AF37"
-                        android:layout_marginEnd="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/actualStartTime"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#FFFFFF"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="End Time"
-                        android:textColorHint="#666666"
-                        app:boxBackgroundColor="#2A2A2A"
-                        app:boxStrokeColor="#D4AF37"
-                        android:layout_marginStart="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/actualEndTime"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:textColor="#FFFFFF"/>
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-
-                <!-- Environment Conditions -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Environment Conditions"
-                    android:textColorHint="#666666"
-                    app:boxBackgroundColor="#2A2A2A"
-                    app:boxStrokeColor="#D4AF37"
-                    android:layout_marginTop="16dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/environmentConditions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"/>
-                </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Pre-Test Checklist Card -->
+        <!-- Test Execution Details Card -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/preTestCard"
+            android:id="@+id/testExecutionCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="#1A1A1A"
@@ -209,87 +156,74 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pre-Test Checklist"
+                    android:text="Test Execution Details"
                     android:textColor="#D4AF37"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
 
-                <CheckBox
-                    android:id="@+id/consentFormCheck"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Consent Form Signed"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="12dp"/>
-
-                <CheckBox
-                    android:id="@+id/identityVerifiedCheck"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Identity Verified"
-                    android:textColor="#FFFFFF"/>
-
-                <!-- ID Document Upload Button -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/uploadIdButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Upload ID Document"
-                    android:textSize="12sp"
-                    app:backgroundTint="#2A2A2A"
-                    app:cornerRadius="6dp"
-                    android:layout_marginTop="8dp"/>
-
-                <!-- Medical Screening Notes -->
+                <!-- Test Date -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Medical/Psychological Screening Notes"
+                    android:hint="Test Date (YYYY-MM-DD)"
                     android:textColorHint="#666666"
                     app:boxBackgroundColor="#2A2A2A"
                     app:boxStrokeColor="#D4AF37"
                     android:layout_marginTop="16dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/medicalNotes"
+                        android:id="@+id/testDate"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:minHeight="80dp"
-                        android:gravity="top"/>
+                        android:textColor="#FFFFFF"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Pre-test Questions Summary -->
+                <!-- Test Time -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Pre-test Questions Summary"
+                    android:hint="Test Time (HH:MM)"
                     android:textColorHint="#666666"
                     app:boxBackgroundColor="#2A2A2A"
                     app:boxStrokeColor="#D4AF37"
                     android:layout_marginTop="16dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/preTestQuestions"
+                        android:id="@+id/testTime"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:minHeight="80dp"
-                        android:gravity="top"/>
+                        android:textColor="#FFFFFF"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Test Location -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Test Location"
+                    android:textColorHint="#666666"
+                    app:boxBackgroundColor="#2A2A2A"
+                    app:boxStrokeColor="#D4AF37"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/testLocation"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Test Administration Card -->
+        <!-- Examinee Information Card -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/testAdminCard"
+            android:id="@+id/examineeCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="#1A1A1A"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/preTestCard"
+            app:layout_constraintTop_toBottomOf="@id/testExecutionCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -302,104 +236,50 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Test Administration"
+                    android:text="Examinee Information"
                     android:textColor="#D4AF37"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
 
-                <!-- Equipment Calibration -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="12dp">
-
-                    <CheckBox
-                        android:id="@+id/calibrationCheck"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Equipment Calibrated"
-                        android:textColor="#FFFFFF"/>
-
-                    <TextView
-                        android:id="@+id/calibrationTimestamp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="10:15 AM"
-                        android:textColor="#999999"
-                        android:layout_marginStart="16dp"/>
-                </LinearLayout>
-
-                <!-- Number of Charts -->
+                <!-- Examinee Name -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Number of Charts Recorded"
+                    android:hint="Examinee Full Name"
                     android:textColorHint="#666666"
                     app:boxBackgroundColor="#2A2A2A"
                     app:boxStrokeColor="#D4AF37"
                     android:layout_marginTop="16dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/chartsRecorded"
+                        android:id="@+id/examineeName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="#FFFFFF"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Examinee Details -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Additional Examinee Details (Optional)"
+                    android:textColorHint="#666666"
+                    app:boxBackgroundColor="#2A2A2A"
+                    app:boxStrokeColor="#D4AF37"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/examineeDetails"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
-                        android:inputType="number"/>
+                        android:minHeight="80dp"
+                        android:gravity="top"/>
                 </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Test Format -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Test Format"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="16dp"/>
-
-                <RadioGroup
-                    android:id="@+id/testFormatGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_marginTop="8dp">
-
-                    <RadioButton
-                        android:id="@+id/formatCQT"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Comparison Question Test (CQT)"
-                        android:textColor="#FFFFFF"/>
-
-                    <RadioButton
-                        android:id="@+id/formatDLT"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Directed Lie Test (DLT)"
-                        android:textColor="#FFFFFF"/>
-
-                    <RadioButton
-                        android:id="@+id/formatOther"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Other"
-                        android:textColor="#FFFFFF"/>
-                </RadioGroup>
-
-                <!-- Question Sheet Upload -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/uploadQuestionsButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:text="Attach Question Sheet"
-                    android:textSize="12sp"
-                    app:backgroundTint="#2A2A2A"
-                    app:cornerRadius="6dp"
-                    android:layout_marginTop="16dp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Results Card -->
+        <!-- Test Results Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/resultsCard"
             android:layout_width="0dp"
@@ -408,7 +288,7 @@
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/testAdminCard"
+            app:layout_constraintTop_toBottomOf="@id/examineeCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -421,31 +301,32 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Results"
+                    android:text="Test Results"
                     android:textColor="#D4AF37"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
 
-                <!-- Observations -->
+                <!-- Result Summary -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Observations"
+                    android:hint="Result Summary"
                     android:textColorHint="#666666"
                     app:boxBackgroundColor="#2A2A2A"
                     app:boxStrokeColor="#D4AF37"
                     android:layout_marginTop="16dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/observations"
+                        android:id="@+id/resultSummary"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
-                        android:minHeight="80dp"
-                        android:gravity="top"/>
+                        android:minHeight="120dp"
+                        android:gravity="top"
+                        android:hint="e.g., Based on the polygraph examination conducted, the examinee has passed/failed. For more information contact the examiner."/>
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Outcome -->
+                <!-- Test Outcome -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -457,7 +338,7 @@
                     android:id="@+id/outcomeRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_marginTop="8dp">
 
                     <RadioButton
@@ -472,42 +353,35 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Fail"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginStart="16dp"/>
+                        android:textColor="#FFFFFF"/>
 
                     <RadioButton
                         android:id="@+id/outcomeInconclusive"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Inconclusive"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginStart="16dp"/>
+                        android:textColor="#FFFFFF"/>
+
+                    <RadioButton
+                        android:id="@+id/outcomeNDI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="No Deception Indicated"
+                        android:textColor="#FFFFFF"/>
+
+                    <RadioButton
+                        android:id="@+id/outcomeDI"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Deception Indicated"
+                        android:textColor="#FFFFFF"/>
                 </RadioGroup>
-
-                <!-- Confidence Rating -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Confidence Rating"
-                    android:textColor="#FFFFFF"
-                    android:layout_marginTop="16dp"/>
-
-                <RatingBar
-                    android:id="@+id/confidenceRating"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:numStars="5"
-                    android:stepSize="1"
-                    android:rating="0"
-                    android:progressTint="#D4AF37"
-                    android:secondaryProgressTint="#666666"
-                    android:layout_marginTop="8dp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Post-Test Notes Card -->
+        <!-- Internal Notes Card -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/postTestCard"
+            android:id="@+id/internalNotesCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="#1A1A1A"
@@ -527,61 +401,42 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Post-Test Notes"
+                    android:text="Internal Notes (Not shown in report)"
                     android:textColor="#D4AF37"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
 
-                <!-- Examiner Comments -->
+                <!-- Internal Notes -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Examiner's Comments"
+                    android:hint="Internal Notes"
                     android:textColorHint="#666666"
                     app:boxBackgroundColor="#2A2A2A"
                     app:boxStrokeColor="#D4AF37"
                     android:layout_marginTop="16dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/examinerComments"
+                        android:id="@+id/internalNotes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
-                        android:minHeight="120dp"
-                        android:gravity="top"/>
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Recommendations -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Recommendations"
-                    android:textColorHint="#666666"
-                    app:boxBackgroundColor="#2A2A2A"
-                    app:boxStrokeColor="#D4AF37"
-                    android:layout_marginTop="16dp">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/recommendations"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="#FFFFFF"
-                        android:minHeight="80dp"
+                        android:minHeight="100dp"
                         android:gravity="top"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Attachments Card -->
+        <!-- Test Status Card -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/attachmentsCard"
+            android:id="@+id/statusCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="#1A1A1A"
             app:cardCornerRadius="12dp"
             app:cardElevation="4dp"
             android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/postTestCard"
+            app:layout_constraintTop_toBottomOf="@id/internalNotesCard"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -594,113 +449,59 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Attachments"
-                    android:textColor="#D4AF37"
-                    android:textSize="16sp"
-                    android:fontFamily="sans-serif-medium"/>
-
-                <!-- Upload Buttons -->
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/uploadDocsButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="Upload Supporting Documents"
-                    android:textSize="14sp"
-                    app:backgroundTint="#2A2A2A"
-                    app:cornerRadius="8dp"
-                    android:layout_marginTop="16dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/uploadChartsButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:text="Attach Polygraph Charts"
-                    android:textSize="14sp"
-                    app:backgroundTint="#2A2A2A"
-                    app:cornerRadius="8dp"
-                    android:layout_marginTop="8dp"/>
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Report Generation Section -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/reportCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:cardBackgroundColor="#1A1A1A"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            android:layout_marginTop="20dp"
-            app:layout_constraintTop_toBottomOf="@id/attachmentsCard"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="20dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Report Status"
+                    android:text="Test Status"
                     android:textColor="#D4AF37"
                     android:textSize="16sp"
                     android:fontFamily="sans-serif-medium"/>
 
                 <RadioGroup
-                    android:id="@+id/reportStatusGroup"
+                    android:id="@+id/statusRadioGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:layout_marginTop="12dp">
 
                     <RadioButton
-                        android:id="@+id/reportDraft"
+                        android:id="@+id/statusDraft"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Draft"
+                        android:textColor="#FFFFFF"
+                        android:checked="true"/>
+
+                    <RadioButton
+                        android:id="@+id/statusCompleted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Completed"
                         android:textColor="#FFFFFF"/>
 
                     <RadioButton
-                        android:id="@+id/reportFinal"
+                        android:id="@+id/statusReviewed"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Final"
-                        android:textColor="#FFFFFF"
-                        android:layout_marginStart="16dp"/>
+                        android:text="Reviewed"
+                        android:textColor="#FFFFFF"/>
+
+                    <RadioButton
+                        android:id="@+id/statusReleased"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Released"
+                        android:textColor="#FFFFFF"/>
                 </RadioGroup>
 
-                <LinearLayout
+                <!-- Save Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveTestBtn"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:layout_marginTop="16dp">
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/previewReportBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="1"
-                        android:text="Preview Report"
-                        android:textSize="14sp"
-                        app:backgroundTint="#2A2A2A"
-                        app:cornerRadius="8dp"
-                        android:layout_marginEnd="8dp"/>
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/generateReportBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="1"
-                        android:text="Generate PDF"
-                        android:textSize="14sp"
-                        android:textColor="#000000"
-                        app:backgroundTint="#D4AF37"
-                        app:cornerRadius="8dp"
-                        android:layout_marginStart="8dp"/>
-                </LinearLayout>
+                    android:layout_height="56dp"
+                    android:text="Save Test"
+                    android:textSize="16sp"
+                    android:textColor="#000000"
+                    app:backgroundTint="#D4AF37"
+                    app:cornerRadius="8dp"
+                    android:layout_marginTop="24dp"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

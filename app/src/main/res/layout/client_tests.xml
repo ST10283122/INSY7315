@@ -61,17 +61,6 @@
                     android:fontFamily="sans-serif-light"
                     android:letterSpacing="0.15"/>
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/filterButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@drawable/ic_filter"
-                android:contentDescription="Filter"
-                app:tint="#D4AF37"
-                android:padding="4dp"
-                android:clickable="true"
-                android:focusable="true"/>
         </LinearLayout>
 
         <!-- Page Title Section -->
@@ -108,475 +97,129 @@
                 android:layout_marginTop="12dp"/>
         </LinearLayout>
 
+        <!-- Stats Overview -->
+        <LinearLayout
+            android:id="@+id/statsOverview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            app:layout_constraintTop_toBottomOf="@id/titleSection"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp">
+
+            <!-- Total Tests -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="#1A1A1A"
+                android:padding="16dp"
+                android:layout_marginEnd="6dp">
+
+                <TextView
+                    android:id="@+id/totalTestsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="24sp"
+                    android:textColor="#D4AF37"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Tests"
+                    android:textSize="11sp"
+                    android:textColor="#999999"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+
+            <!-- Completed Tests -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:background="#1A1A1A"
+                android:padding="16dp"
+                android:layout_marginStart="6dp">
+
+                <TextView
+                    android:id="@+id/completedTestsCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0"
+                    android:textSize="24sp"
+                    android:textColor="#D4AF37"
+                    android:fontFamily="sans-serif-medium"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Completed"
+                    android:textSize="11sp"
+                    android:textColor="#999999"
+                    android:layout_marginTop="4dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Results List Label -->
+        <TextView
+            android:id="@+id/resultsLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOUR TESTS"
+            android:textSize="12sp"
+            android:textColor="#999999"
+            android:letterSpacing="0.2"
+            android:fontFamily="sans-serif-medium"
+            app:layout_constraintTop_toBottomOf="@id/statsOverview"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="32dp"/>
+
         <!-- Test History List -->
         <LinearLayout
             android:id="@+id/historyList"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@id/titleSection"
+            app:layout_constraintTop_toBottomOf="@id/resultsLabel"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp"/>
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/emptyState"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="48dp"
+            app:layout_constraintTop_toBottomOf="@id/resultsLabel"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="32dp">
 
-            <!-- Test Item 1 - Completed -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
+                android:text="No test results yet"
+                android:textSize="18sp"
+                android:textColor="#999999"
+                android:fontFamily="sans-serif-medium"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp">
-
-                    <!-- Status Badge -->
-                    <TextView
-                        android:id="@+id/status1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="COMPLETED"
-                        android:textSize="10sp"
-                        android:textColor="#000000"
-                        android:background="#D4AF37"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0.1"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-
-                    <!-- Test Type -->
-                    <TextView
-                        android:id="@+id/testType1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Pre-Employment Screening"
-                        android:textSize="18sp"
-                        android:textColor="#FFFFFF"
-                        android:fontFamily="sans-serif-medium"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/status1"
-                        android:layout_marginEnd="16dp"/>
-
-                    <!-- Test ID -->
-                    <TextView
-                        android:id="@+id/testId1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Test ID: #PG2024-0847"
-                        android:textSize="12sp"
-                        android:textColor="#999999"
-                        android:fontFamily="sans-serif-light"
-                        app:layout_constraintTop_toBottomOf="@id/testType1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginTop="6dp"/>
-
-                    <!-- Divider -->
-                    <View
-                        android:id="@+id/divider1"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:background="#333333"
-                        app:layout_constraintTop_toBottomOf="@id/testId1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="16dp"/>
-
-                    <!-- Details Grid -->
-                    <LinearLayout
-                        android:id="@+id/detailsGrid1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        app:layout_constraintTop_toBottomOf="@id/divider1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="16dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="DATE"
-                                android:textSize="10sp"
-                                android:textColor="#999999"
-                                android:letterSpacing="0.1"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="March 15, 2024"
-                                android:textSize="14sp"
-                                android:textColor="#FFFFFF"
-                                android:layout_marginTop="4dp"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="EXAMINER"
-                                android:textSize="10sp"
-                                android:textColor="#999999"
-                                android:letterSpacing="0.1"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Dr. Sarah Johnson"
-                                android:textSize="14sp"
-                                android:textColor="#FFFFFF"
-                                android:layout_marginTop="4dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- View Report Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/viewReport1"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
-                        android:text="VIEW REPORT"
-                        android:textSize="13sp"
-                        android:textColor="#000000"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0.1"
-                        app:backgroundTint="#D4AF37"
-                        app:cornerRadius="6dp"
-                        app:layout_constraintTop_toBottomOf="@id/detailsGrid1"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="20dp"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Test Item 2 - Pending -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp">
-
-                    <!-- Status Badge -->
-                    <TextView
-                        android:id="@+id/status2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="SCHEDULED"
-                        android:textSize="10sp"
-                        android:textColor="#000000"
-                        android:background="#B8960F"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0.1"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-
-                    <!-- Test Type -->
-                    <TextView
-                        android:id="@+id/testType2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Relationship Verification"
-                        android:textSize="18sp"
-                        android:textColor="#FFFFFF"
-                        android:fontFamily="sans-serif-medium"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/status2"
-                        android:layout_marginEnd="16dp"/>
-
-                    <!-- Test ID -->
-                    <TextView
-                        android:id="@+id/testId2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Test ID: #PG2024-0923"
-                        android:textSize="12sp"
-                        android:textColor="#999999"
-                        android:fontFamily="sans-serif-light"
-                        app:layout_constraintTop_toBottomOf="@id/testType2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginTop="6dp"/>
-
-                    <!-- Divider -->
-                    <View
-                        android:id="@+id/divider2"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:background="#333333"
-                        app:layout_constraintTop_toBottomOf="@id/testId2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="16dp"/>
-
-                    <!-- Details Grid -->
-                    <LinearLayout
-                        android:id="@+id/detailsGrid2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        app:layout_constraintTop_toBottomOf="@id/divider2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="16dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="DATE"
-                                android:textSize="10sp"
-                                android:textColor="#999999"
-                                android:letterSpacing="0.1"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="October 12, 2024"
-                                android:textSize="14sp"
-                                android:textColor="#FFFFFF"
-                                android:layout_marginTop="4dp"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="EXAMINER"
-                                android:textSize="10sp"
-                                android:textColor="#999999"
-                                android:letterSpacing="0.1"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Dr. Michael Chen"
-                                android:textSize="14sp"
-                                android:textColor="#FFFFFF"
-                                android:layout_marginTop="4dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- View Details Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/viewDetails2"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
-                        android:text="VIEW DETAILS"
-                        android:textSize="13sp"
-                        android:textColor="#D4AF37"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0.1"
-                        app:backgroundTint="#2A2A2A"
-                        app:strokeColor="#D4AF37"
-                        app:strokeWidth="1dp"
-                        app:cornerRadius="6dp"
-                        app:layout_constraintTop_toBottomOf="@id/detailsGrid2"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="20dp"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
-            <!-- Test Item 3 - Completed -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardElevation="4dp"
-                app:cardCornerRadius="12dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?android:attr/selectableItemBackground">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="20dp">
-
-                    <!-- Status Badge -->
-                    <TextView
-                        android:id="@+id/status3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="COMPLETED"
-                        android:textSize="10sp"
-                        android:textColor="#000000"
-                        android:background="#D4AF37"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp"
-                        android:paddingTop="4dp"
-                        android:paddingBottom="4dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0.1"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"/>
-
-                    <!-- Test Type -->
-                    <TextView
-                        android:id="@+id/testType3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Criminal Investigation"
-                        android:textSize="18sp"
-                        android:textColor="#FFFFFF"
-                        android:fontFamily="sans-serif-medium"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toStartOf="@id/status3"
-                        android:layout_marginEnd="16dp"/>
-
-                    <!-- Test ID -->
-                    <TextView
-                        android:id="@+id/testId3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Test ID: #PG2024-0621"
-                        android:textSize="12sp"
-                        android:textColor="#999999"
-                        android:fontFamily="sans-serif-light"
-                        app:layout_constraintTop_toBottomOf="@id/testType3"
-                        app:layout_constraintStart_toStartOf="parent"
-                        android:layout_marginTop="6dp"/>
-
-                    <!-- Divider -->
-                    <View
-                        android:id="@+id/divider3"
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:background="#333333"
-                        app:layout_constraintTop_toBottomOf="@id/testId3"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="16dp"/>
-
-                    <!-- Details Grid -->
-                    <LinearLayout
-                        android:id="@+id/detailsGrid3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        app:layout_constraintTop_toBottomOf="@id/divider3"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="16dp">
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="DATE"
-                                android:textSize="10sp"
-                                android:textColor="#999999"
-                                android:letterSpacing="0.1"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="January 8, 2024"
-                                android:textSize="14sp"
-                                android:textColor="#FFFFFF"
-                                android:layout_marginTop="4dp"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="EXAMINER"
-                                android:textSize="10sp"
-                                android:textColor="#999999"
-                                android:letterSpacing="0.1"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Dr. Sarah Johnson"
-                                android:textSize="14sp"
-                                android:textColor="#FFFFFF"
-                                android:layout_marginTop="4dp"/>
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- View Report Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/viewReport3"
-                        android:layout_width="0dp"
-                        android:layout_height="42dp"
-                        android:text="VIEW REPORT"
-                        android:textSize="13sp"
-                        android:textColor="#000000"
-                        android:fontFamily="sans-serif-medium"
-                        android:letterSpacing="0.1"
-                        app:backgroundTint="#D4AF37"
-                        app:cornerRadius="6dp"
-                        app:layout_constraintTop_toBottomOf="@id/detailsGrid3"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        android:layout_marginTop="20dp"/>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.cardview.widget.CardView>
-
+                android:text="Your completed tests will appear here"
+                android:textSize="14sp"
+                android:textColor="#666666"
+                android:layout_marginTop="8dp"/>
         </LinearLayout>
 
         <!-- Footer -->

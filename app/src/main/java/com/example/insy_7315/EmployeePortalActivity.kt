@@ -17,6 +17,7 @@ class EmployeePortalActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         sessionManager = SessionManager(this)
+
         setupUI()
         setupClickListeners()
     }
@@ -46,19 +47,24 @@ class EmployeePortalActivity : AppCompatActivity() {
                     "Session expired. Please login again.",
                     Toast.LENGTH_SHORT
                 ).show()
-                // Optionally navigate back to login
-                // navigateToLogin()
             }
         }
 
         // Past Tests Card
         binding.pastTestsCard.setOnClickListener {
-            // TODO: Navigate to Past Tests activity when implemented
-            Toast.makeText(
-                this,
-                "Past Tests - Coming Soon",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (user != null) {
+                val intent = Intent(this, EmployeeHistoryActivity::class.java).apply {
+                    putExtra("USER_ID", user.userId)
+                    putExtra("USER_NAME", user.fullName)
+                }
+                startActivity(intent)
+            } else {
+                Toast.makeText(
+                    this,
+                    "Session expired. Please login again.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.insy_7315
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -514,8 +515,12 @@ class EmployeeBookingsActivity : AppCompatActivity() {
         Log.d(TAG, "Appointment item inflated: ${booking.clientName} at $displayTime (paid=$amountPaid, balance=$balance)")
 
         view.setOnClickListener {
-            // TODO: Navigate to appointment details
-            Toast.makeText(this, "View details for ${booking.bookingReference}", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, EmployeeTestDetailsActivity::class.java).apply {
+                putExtra("BOOKING_ID", booking.bookingId)
+                putExtra("EMPLOYEE_ID", employeeId)
+                putExtra("EMPLOYEE_NAME", employeeName)
+            }
+            startActivity(intent)
         }
 
         return view
