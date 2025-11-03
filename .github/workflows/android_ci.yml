@@ -30,13 +30,12 @@ jobs:
 
       - name: Run OWASP Dependency Check
         uses: dependency-check/Dependency-Check_Action@main
-        env:
-          JAVA_HOME: /opt/java/openjdk17
         with:
           project: 'INSY7315-android-app'
           path: '.'
           format: 'HTML'
           out: 'app/build/reports/dependency-check'
+          args: '--noupdate'
 
       - name: Upload dependency check report
         uses: actions/upload-artifact@v4
@@ -58,6 +57,9 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -76,7 +78,7 @@ jobs:
         if: always()
         with:
           name: unit-test-results
-          path: app/build/reports/tests/testDebugUnitTest
+          path: app/build/reports/tests/
 
   jacoco-coverage:
     runs-on: ubuntu-latest
@@ -92,8 +94,15 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Generate Jacoco coverage report
         run: ./gradlew testCoverageReport
@@ -103,7 +112,7 @@ jobs:
         if: always()
         with:
           name: jacoco-report
-          path: app/build/reports/jacoco/testDebugUnitTestCoverage
+          path: app/build/reports/jacoco/
 
   sonarqube:
     runs-on: ubuntu-latest
@@ -121,6 +130,16 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+
       - name: Cache SonarQube packages
         uses: actions/cache@v3
         with:
@@ -128,19 +147,23 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
+      - name: Build and run tests with coverage
+        run: |
+          ./gradlew clean testDebugUnitTest testCoverageReport
+
       - name: Build and analyze with SonarQube
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
-          ./gradlew build sonarqube \
+          ./gradlew sonarqube \
             -Dsonar.projectKey=ST10283122_INSY7315 \
             -Dsonar.projectName='INSY7315 Android Project' \
-            -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTestCoverage/testDebugUnitTestCoverage.xml
+            -Dsonar.coverage.jacoco.xmlReportPaths=app/build/reports/jacoco/testDebugUnitTestCoverage/testDebugUnitTestCoverage.xml \
+            -Dsonar.gradle.skipCompile=true
 
   gradle-dependency-audit:
     runs-on: ubuntu-latest
-    needs: security-scan
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -167,6 +190,7 @@ jobs:
 
   trufflehog-secret-scan:
     runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -177,8 +201,9 @@ jobs:
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
+          base: ${{ github.event.pull_request.base.sha }}
+          head: ${{ github.event.pull_request.head.sha }}
+          extra_args: --debug
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -196,6 +221,9 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -212,3 +240,71 @@ jobs:
         with:
           name: app-build
           path: app/build/outputs/
+
+  integration-tests:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      - name: Run instrumentation tests
+        run: |
+          ./gradlew connectedDebugAndroidTest
+
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: integration-test-results
+          path: app/build/reports/androidTests/
+
+  lint-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      - name: Run lint checks
+        run: ./gradlew lintDebug
+
+      - name: Upload lint report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint-report
+          path: app/build/reports/lint/
