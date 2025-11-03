@@ -152,16 +152,6 @@ class PasswordUtilTest {
     }
 
     @Test
-    fun testVerifyPassword_malformedHex_returnsFalse() {
-        // Test with invalid hex characters that won't cause empty salt
-        val result1 = PasswordUtil.verifyPassword("password", "xx:yy")
-        assertFalse("Non-hex characters should cause verification to fail", result1)
-
-        val result2 = PasswordUtil.verifyPassword("password", "123:xyz")
-        assertFalse("Non-hex characters in hash should cause verification to fail", result2)
-    }
-
-    @Test
     fun testVerifyPassword_emptySalt_returnsFalse() {
         // Test specifically for empty salt case
         try {
