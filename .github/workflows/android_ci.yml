@@ -209,7 +209,10 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Build and run tests
-        run: ./gradlew clean testDebugUnitTest testDebugUnitTestCoverage --tests '*' --tests '!*.testTimingAttackResistance' --tests '!*.testVerifyPassword_malformedHex_returnsFalse'
+        run: |
+          ./gradlew clean
+          ./gradlew testDebugUnitTest --tests '*' --tests '!*.testTimingAttackResistance' --tests '!*.testVerifyPassword_malformedHex_returnsFalse'
+          ./gradlew testDebugUnitTestCoverage
 
       - name: Analyze with SonarQube
         env:
