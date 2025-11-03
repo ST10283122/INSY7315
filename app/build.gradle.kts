@@ -189,7 +189,7 @@ dependencies {
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
     testImplementation("androidx.annotation:annotation:1.7.0")
     testImplementation("io.mockk:mockk-agent-jvm:1.13.8")
-
+    testImplementation("org.robolectric:robolectric:4.10.3")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation("androidx.test:core:1.5.0")
