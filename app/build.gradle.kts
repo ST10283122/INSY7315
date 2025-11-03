@@ -141,10 +141,7 @@ tasks.register<JacocoReport>("testDebugUnitTestCoverage") {
     classDirectories.setFrom(files(javaClasses, kotlinClasses))
 
     val jacocoExecFiles: FileCollection = fileTree(layout.buildDirectory.asFile) {
-        include(
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec"
-        )
+        include("jacoco/testDebugUnitTest.exec")
     }
     executionData.setFrom(jacocoExecFiles)
 

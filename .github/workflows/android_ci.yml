@@ -111,16 +111,18 @@ jobs:
       - name: Run tests with coverage
         run: ./gradlew testDebugUnitTest --tests '*' --tests '!*.testTimingAttackResistance' --tests '!*.testVerifyPassword_malformedHex_returnsFalse'
 
-      - name: Generate Jacoco report
-        run: ./gradlew jacocoTestReport
+      - name: Run unit tests with coverage
+        run: ./gradlew testDebugUnitTest testDebugUnitTestCoverage -Pandroid.testCoverageEnabled=true
 
       - name: Check if Jacoco reports exist
         run: |
-          if [ -d "app/build/reports/jacoco" ]; then
+          REPORT_DIR="app/build/reports/jacoco/testDebugUnitTestCoverage"
+          if [ -d "$REPORT_DIR" ]; then
             echo "Jacoco reports found"
-            ls -la app/build/reports/jacoco/
+            ls -la "$REPORT_DIR"
           else
             echo "No Jacoco reports generated"
+            exit 1
           fi
 
       - name: Upload Jacoco report
@@ -128,7 +130,7 @@ jobs:
         if: always()
         with:
           name: jacoco-report
-          path: app/build/reports/jacoco/jacocoTestReport/html/
+          path: app/build/reports/jacoco/testDebugUnitTestCoverage/
 
   lint-check:
     runs-on: ubuntu-latest
