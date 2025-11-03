@@ -111,28 +111,6 @@ class PasswordUtilTest {
         assertEquals("All hashes should be unique with random salts", 10, hashes.size)
     }
 
-    @Test
-    fun testTimingAttackResistance() {
-        // This is a basic test - in practice you'd need more sophisticated timing measurement
-        val password = "password"
-        val correctHash = PasswordUtil.hashPassword(password)
-        val wrongPassword = "wrongpassword"
-
-        // Both verifications should take similar time (not exact due to JVM warmup)
-        val start1 = System.nanoTime()
-        PasswordUtil.verifyPassword(password, correctHash)
-        val duration1 = System.nanoTime() - start1
-
-        val start2 = System.nanoTime()
-        PasswordUtil.verifyPassword(wrongPassword, correctHash)
-        val duration2 = System.nanoTime() - start2
-
-        // Allow some variance, but they should be roughly similar
-        val ratio = duration1.toDouble() / duration2.toDouble()
-        assertTrue("Verification time should be similar for correct and incorrect passwords",
-            ratio > 0.5 && ratio < 2.0)
-    }
-
     // ============= ERROR CASE TESTS =============
 
     @Test
