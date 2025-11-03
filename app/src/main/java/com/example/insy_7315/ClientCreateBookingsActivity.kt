@@ -2,15 +2,19 @@ package com.example.insy_7315
 
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.insy_7315.database.DatabaseHelper
 import com.example.insy_7315.databinding.ClientCreateBookingsBinding
 import com.example.insy_7315.models.InvoiceLineItem
+import com.example.insy_7315.models.PaymentGateway
+import com.example.insy_7315.models.PaymentOption
 import com.example.insy_7315.models.TestType
 import com.example.insy_7315.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -20,19 +24,21 @@ import java.util.*
 class ClientCreateBookingsActivity : AppCompatActivity() {
     private lateinit var binding: ClientCreateBookingsBinding
     private lateinit var sessionManager: SessionManager
-
-    private var testTypes = listOf<TestType>()
     private var selectedTestType: TestType? = null
-    private var selectedDate: String = ""
-    private var selectedTime: String = ""
-    private var selectedLocation: String = ""
+    private var selectedDate: String? = null
+    private var selectedTime: String? = null
+    private var selectedLocation: String? = null
+    private var testTypes = listOf<TestType>()
+    private var selectedPaymentGateway: PaymentGateway = PaymentGateway.PAYFAST
+    private var selectedPaymentOption: PaymentOption = PaymentOption.DEPOSIT
 
     private val locations = listOf(
-        "Johannesburg - Head Office",
-        "Pretoria - Branch Office",
-        "Cape Town - Branch Office",
-        "Durban - Branch Office",
-        "Client Location (Additional Fee)"
+        "Head Office - Secunda",
+        "Johannesburg Branch",
+        "Pretoria Branch",
+        "Cape Town Branch",
+        "Durban Branch",
+        "Client Location (Additional Charges Apply)"
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,41 +49,65 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
         sessionManager = SessionManager(this)
 
         setupClickListeners()
+        setupPaymentOptions()
         loadTestTypes()
         setupLocationDropdown()
-        setupPaymentOptionListeners()
+
+        // Handle deep links from onCreate as well
+        handleDeepLink(intent)
     }
 
     private fun setupClickListeners() {
-        binding.backButton.setOnClickListener {
-            finish()
-        }
+        binding.backButton.setOnClickListener { finish() }
 
-        // Date Picker
         binding.dateInput.setOnClickListener {
             showDatePicker()
         }
 
-        // Time Picker
         binding.timeInput.setOnClickListener {
             showTimePicker()
         }
 
-        // Cancel Button
+        binding.proceedButton.setOnClickListener {
+            validateAndProceed()
+        }
+
         binding.cancelButton.setOnClickListener {
             finish()
         }
 
-        // Proceed Button
-        binding.proceedButton.setOnClickListener {
-            validateAndCreateBooking()
+        binding.paymentChoiceGroup.setOnCheckedChangeListener { _, checkedId ->
+            selectedPaymentOption = when (checkedId) {
+                R.id.depositRadio -> PaymentOption.DEPOSIT
+                R.id.fullRadio -> PaymentOption.FULL
+                else -> PaymentOption.DEPOSIT
+            }
+            updatePaymentAmounts()
         }
+
+        binding.payfastRadio.setOnClickListener {
+            selectedPaymentGateway = PaymentGateway.PAYFAST
+        }
+
+        binding.ozowRadio.setOnClickListener {
+            selectedPaymentGateway = PaymentGateway.OZOW
+        }
+
+        binding.stripeRadio.setOnClickListener {
+            selectedPaymentGateway = PaymentGateway.STRIPE
+        }
+    }
+
+    private fun setupPaymentOptions() {
+        binding.payfastRadio.isChecked = true
+        binding.depositRadio.isChecked = true
+        selectedPaymentGateway = PaymentGateway.PAYFAST
+        selectedPaymentOption = PaymentOption.DEPOSIT
     }
 
     private fun loadTestTypes() {
         lifecycleScope.launch {
             val result = DatabaseHelper.getTestTypes()
-
             result.onSuccess { types ->
                 testTypes = types
                 setupTestTypeDropdown(types)
@@ -85,25 +115,32 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
                 Toast.makeText(
                     this@ClientCreateBookingsActivity,
                     "Failed to load test types: ${error.message}",
-                    Toast.LENGTH_LONG
+                    Toast.LENGTH_SHORT
                 ).show()
             }
         }
     }
 
-    private fun setupTestTypeDropdown(types: List<TestType>) {
-        val testTypeNames = types.map { it.testName }
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, testTypeNames)
+    private fun setupTestTypeDropdown(testTypes: List<TestType>) {
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            testTypes.map { it.testName }
+        )
         binding.testTypeInput.setAdapter(adapter)
 
         binding.testTypeInput.setOnItemClickListener { _, _, position, _ ->
-            selectedTestType = types[position]
-            updatePricing(types[position])
+            selectedTestType = testTypes[position]
+            updatePricingDisplay()
         }
     }
 
     private fun setupLocationDropdown() {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, locations)
+        val adapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_dropdown_item_1line,
+            locations
+        )
         binding.locationInput.setAdapter(adapter)
 
         binding.locationInput.setOnItemClickListener { _, _, position, _ ->
@@ -111,281 +148,362 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupPaymentOptionListeners() {
-        binding.paymentChoiceGroup.setOnCheckedChangeListener { _, _ ->
-            updatePaymentButton()
-        }
-    }
-
-    private fun updatePricing(testType: TestType) {
-        if (testType.baseFee != null) {
-            val sessionFee = testType.baseFee
-            val deposit = sessionFee * 0.3
-
-            binding.sessionFeeAmount.text = "R ${String.format("%.2f", sessionFee)}"
-            binding.depositAmount.text = "R ${String.format("%.2f", deposit)}"
-
-            binding.pricingCard.visibility = View.VISIBLE
-            binding.paymentChoiceLabel.visibility = View.VISIBLE
-            binding.paymentChoiceGroup.visibility = View.VISIBLE
-            binding.paymentMethodLabel.visibility = View.VISIBLE
-            binding.paymentMethodGroup.visibility = View.VISIBLE
-
-            updatePaymentButton()
-        } else {
-            // Case dependent pricing
-            binding.sessionFeeAmount.text = "TBD"
-            binding.depositAmount.text = "TBD"
-            binding.depositNote.text = "Quote will be provided after review"
-
-            binding.pricingCard.visibility = View.VISIBLE
-            binding.paymentChoiceLabel.visibility = View.GONE
-            binding.paymentChoiceGroup.visibility = View.GONE
-            binding.paymentMethodLabel.visibility = View.GONE
-            binding.paymentMethodGroup.visibility = View.GONE
-
-            binding.proceedButton.text = "SUBMIT BOOKING REQUEST"
-        }
-    }
-
-    private fun updatePaymentButton() {
+    private fun updatePricingDisplay() {
         selectedTestType?.let { testType ->
-            if (testType.baseFee != null) {
-                val amount = if (binding.depositRadio.isChecked) {
-                    testType.baseFee * 0.3
-                } else {
-                    testType.baseFee
-                }
-                binding.proceedButton.text = "PROCEED TO PAYMENT (R ${String.format("%.2f", amount)})"
+            val baseFee = testType.baseFee ?: 0.0
+            val deposit = baseFee * 0.30
+
+            binding.sessionFeeAmount.text = if (baseFee > 0) {
+                "R ${String.format("%.2f", baseFee)}"
+            } else {
+                "Case Dependent"
             }
+
+            binding.depositAmount.text = if (baseFee > 0) {
+                "R ${String.format("%.2f", deposit)}"
+            } else {
+                "TBD"
+            }
+
+            updatePaymentAmounts()
+        }
+    }
+
+    private fun updatePaymentAmounts() {
+        selectedTestType?.let { testType ->
+            val baseFee = testType.baseFee ?: 0.0
+            val deposit = baseFee * 0.30
+
+            val amount = when (selectedPaymentOption) {
+                PaymentOption.DEPOSIT -> deposit
+                PaymentOption.FULL -> baseFee
+            }
+
+            val buttonText = when (selectedPaymentOption) {
+                PaymentOption.DEPOSIT -> "PROCEED TO PAYMENT (R ${String.format("%.2f", deposit)})"
+                PaymentOption.FULL -> "PROCEED TO PAYMENT (R ${String.format("%.2f", baseFee)})"
+            }
+
+            binding.proceedButton.text = buttonText
         }
     }
 
     private fun showDatePicker() {
         val calendar = Calendar.getInstance()
+        calendar.add(Calendar.DAY_OF_MONTH, 1)
 
-        val datePickerDialog = DatePickerDialog(
+        val datePicker = DatePickerDialog(
             this,
-            { _, year, month, dayOfMonth ->
-                val selectedCalendar = Calendar.getInstance()
-                selectedCalendar.set(year, month, dayOfMonth)
-
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-                selectedDate = dateFormat.format(selectedCalendar.time)
+            { _, year, month, day ->
+                val formattedDate = String.format("%04d-%02d-%02d", year, month + 1, day)
+                selectedDate = formattedDate
 
                 val displayFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                binding.dateInput.setText(displayFormat.format(selectedCalendar.time))
+                val parsedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(formattedDate)
+                binding.dateInput.setText(displayFormat.format(parsedDate ?: Date()))
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
             calendar.get(Calendar.DAY_OF_MONTH)
         )
 
-        // Don't allow past dates
-        datePickerDialog.datePicker.minDate = System.currentTimeMillis()
-        datePickerDialog.show()
+        datePicker.datePicker.minDate = calendar.timeInMillis
+        datePicker.show()
     }
 
     private fun showTimePicker() {
         val calendar = Calendar.getInstance()
-
-        val timePickerDialog = TimePickerDialog(
+        val timePicker = TimePickerDialog(
             this,
-            { _, hourOfDay, minute ->
-                val timeCalendar = Calendar.getInstance()
-                timeCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay)
-                timeCalendar.set(Calendar.MINUTE, minute)
-
-                val timeFormat = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-                selectedTime = timeFormat.format(timeCalendar.time)
-
-                val displayFormat = SimpleDateFormat("h:mm a", Locale.getDefault())
-                binding.timeInput.setText(displayFormat.format(timeCalendar.time))
+            { _, hour, minute ->
+                val formattedTime = String.format("%02d:%02d:00", hour, minute)
+                selectedTime = formattedTime
+                binding.timeInput.setText(String.format("%02d:%02d", hour, minute))
             },
             calendar.get(Calendar.HOUR_OF_DAY),
             calendar.get(Calendar.MINUTE),
-            false
+            true
         )
-
-        timePickerDialog.show()
+        timePicker.show()
     }
 
-    private fun validateAndCreateBooking() {
-        // Validate test type
-        if (selectedTestType == null) {
-            binding.testTypeLayout.error = "Please select a test type"
-            binding.testTypeInput.requestFocus()
-            return
-        }
-        binding.testTypeLayout.error = null
-
-        // Validate date
-        if (selectedDate.isEmpty()) {
-            binding.dateLayout.error = "Please select a date"
-            binding.dateInput.requestFocus()
-            return
-        }
-        binding.dateLayout.error = null
-
-        // Validate time
-        if (selectedTime.isEmpty()) {
-            binding.timeLayout.error = "Please select a time"
-            binding.timeInput.requestFocus()
-            return
-        }
-        binding.timeLayout.error = null
-
-        // Validate location
-        if (selectedLocation.isEmpty()) {
-            binding.locationLayout.error = "Please select a location"
-            binding.locationInput.requestFocus()
-            return
-        }
-        binding.locationLayout.error = null
-
-        // Get user
+    private fun validateAndProceed() {
         val user = sessionManager.getUser()
         if (user == null) {
             Toast.makeText(this, "Please login first", Toast.LENGTH_SHORT).show()
-            finish()
             return
         }
 
-        // Calculate amounts
-        val testType = selectedTestType!!
-        val sessionFee = testType.baseFee ?: 0.0
-        val depositRequired = if (testType.baseFee != null) {
-            if (binding.depositRadio.isChecked) {
-                sessionFee * 0.3
-            } else {
-                sessionFee
-            }
-        } else {
-            0.0
+        if (selectedTestType == null) {
+            Toast.makeText(this, "Please select a test type", Toast.LENGTH_SHORT).show()
+            return
         }
 
-        val additionalNotes = binding.notesInput.text.toString().trim()
-        val paymentMethod = getSelectedPaymentMethod()
-        val paymentGateway = getSelectedPaymentGateway()
+        if (selectedDate == null) {
+            Toast.makeText(this, "Please select a preferred date", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        // Disable button
+        if (selectedTime == null) {
+            Toast.makeText(this, "Please select a preferred time", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (selectedLocation == null) {
+            Toast.makeText(this, "Please select a location", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val testType = selectedTestType!!
+        if (testType.baseFee == null || testType.baseFee == 0.0) {
+            Toast.makeText(
+                this,
+                "This test type requires a custom quote. Please contact us.",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+
+        showConfirmationDialog()
+    }
+
+    private fun showConfirmationDialog() {
+        val testType = selectedTestType!!
+        val baseFee = testType.baseFee!!
+        val deposit = baseFee * 0.30
+
+        val paymentAmount = when (selectedPaymentOption) {
+            PaymentOption.DEPOSIT -> deposit
+            PaymentOption.FULL -> baseFee
+        }
+
+        val gatewayName = when (selectedPaymentGateway) {
+            PaymentGateway.PAYFAST -> "PayFast"
+            PaymentGateway.OZOW -> "Ozow"
+            PaymentGateway.STRIPE -> "Stripe"
+        }
+
+        val message = """
+            Test Type: ${testType.testName}
+            Date: ${binding.dateInput.text}
+            Time: ${binding.timeInput.text}
+            Location: $selectedLocation
+            
+            Session Fee: R ${String.format("%.2f", baseFee)}
+            ${if (selectedPaymentOption == PaymentOption.DEPOSIT)
+            "Deposit (30%): R ${String.format("%.2f", deposit)}"
+        else
+            "Full Payment: R ${String.format("%.2f", baseFee)}"}
+            
+            Payment Gateway: $gatewayName
+            
+            Continue to payment?
+        """.trimIndent()
+
+        AlertDialog.Builder(this)
+            .setTitle("Confirm Booking")
+            .setMessage(message)
+            .setPositiveButton("Proceed") { _, _ ->
+                createBookingAndInitiatePayment()
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun createBookingAndInitiatePayment() {
+        val user = sessionManager.getUser() ?: return
+        val testType = selectedTestType ?: return
+        val baseFee = testType.baseFee ?: return
+
         binding.proceedButton.isEnabled = false
         binding.proceedButton.text = "PROCESSING..."
 
         lifecycleScope.launch {
-            // Step 1: Create Booking
-            val bookingResult = DatabaseHelper.createBooking(
-                clientId = user.userId,
-                testTypeId = testType.testTypeId,
-                preferredDate = selectedDate,
-                preferredTime = selectedTime,
-                location = selectedLocation,
-                additionalNotes = additionalNotes.ifEmpty { null },
-                sessionFee = sessionFee,
-                depositRequired = depositRequired
-            )
+            try {
+                val deposit = baseFee * 0.30
+                val additionalNotes = binding.notesInput.text.toString()
 
-            bookingResult.onSuccess { booking ->
-                // Step 2: Create Invoice
-                val invoiceResult = DatabaseHelper.createInvoice(
-                    bookingId = booking.bookingId,
-                    dueDate = null, // Immediate payment
-                    totalAmount = sessionFee,
-                    taxAmount = 0.0,
-                    discountAmount = 0.0,
-                    notes = "Invoice for ${testType.testName} - Booking ${booking.bookingReference}",
-                    lineItems = listOf(
-                        InvoiceLineItem(
-                            description = testType.testName,
-                            quantity = 1.0,
-                            unitPrice = sessionFee
-                        )
-                    )
+                val bookingResult = DatabaseHelper.createBooking(
+                    clientId = user.userId,
+                    testTypeId = testType.testTypeId,
+                    preferredDate = selectedDate!!,
+                    preferredTime = selectedTime!!,
+                    location = selectedLocation!!,
+                    additionalNotes = additionalNotes.ifBlank { null },
+                    sessionFee = baseFee,
+                    depositRequired = deposit
                 )
 
-                invoiceResult.onSuccess { invoice ->
-                    // Step 3: Create Payment (simulated - gateway integration later)
-                    if (depositRequired > 0) {
-                        val paymentType = if (depositRequired >= sessionFee) "Full Payment" else "Deposit"
-
-                        // Simulate payment success
-                        val paymentResult = DatabaseHelper.createPayment(
-                            invoiceId = invoice.invoiceId,
-                            bookingId = booking.bookingId,
-                            paymentAmount = depositRequired,
-                            paymentMethod = paymentMethod,
-                            paymentType = paymentType,
-                            transactionId = "SIM_${System.currentTimeMillis()}", // Simulated transaction ID
-                            paymentGateway = paymentGateway,
-                            notes = "Payment via $paymentGateway (Simulated)",
-                            createdBy = user.userId
+                bookingResult.onSuccess { booking ->
+                    val invoiceResult = DatabaseHelper.createInvoice(
+                        bookingId = booking.bookingId,
+                        dueDate = selectedDate,
+                        totalAmount = baseFee,
+                        taxAmount = 0.0,
+                        discountAmount = 0.0,
+                        notes = "Payment for ${testType.testName}",
+                        lineItems = listOf(
+                            InvoiceLineItem(
+                                description = testType.testName,
+                                quantity = 1.0,
+                                unitPrice = baseFee
+                            )
                         )
+                    )
 
-                        paymentResult.onSuccess { payment ->
-                            Toast.makeText(
-                                this@ClientCreateBookingsActivity,
-                                "Success!\n\nBooking: ${booking.bookingReference}\nInvoice: ${invoice.invoiceNumber}\nPayment: ${payment.paymentReference}",
-                                Toast.LENGTH_LONG
-                            ).show()
-
-                            setResult(RESULT_OK)
-                            finish()
-                        }.onFailure { error ->
-                            Toast.makeText(
-                                this@ClientCreateBookingsActivity,
-                                "Booking created but payment failed: ${error.message}",
-                                Toast.LENGTH_LONG
-                            ).show()
-                            binding.proceedButton.isEnabled = true
-                            updatePaymentButton()
+                    invoiceResult.onSuccess { invoice ->
+                        val paymentAmount = when (selectedPaymentOption) {
+                            PaymentOption.DEPOSIT -> deposit
+                            PaymentOption.FULL -> baseFee
                         }
-                    } else {
-                        // No payment required (case dependent pricing)
-                        Toast.makeText(
-                            this@ClientCreateBookingsActivity,
-                            "Booking request submitted!\n\nReference: ${booking.bookingReference}\nQuote will be sent shortly.",
-                            Toast.LENGTH_LONG
-                        ).show()
 
-                        setResult(RESULT_OK)
-                        finish()
+                        initiatePaymentGateway(
+                            bookingId = booking.bookingId,
+                            invoiceId = invoice.invoiceId,
+                            amount = paymentAmount,
+                            clientName = user.fullName,
+                            clientEmail = user.email
+                        )
+                    }.onFailure { error ->
+                        runOnUiThread {
+                            binding.proceedButton.isEnabled = true
+                            updatePaymentAmounts()
+                            Toast.makeText(
+                                this@ClientCreateBookingsActivity,
+                                "Failed to create invoice: ${error.message}",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                 }.onFailure { error ->
+                    runOnUiThread {
+                        binding.proceedButton.isEnabled = true
+                        updatePaymentAmounts()
+                        Toast.makeText(
+                            this@ClientCreateBookingsActivity,
+                            "Failed to create booking: ${error.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
+                }
+            } catch (e: Exception) {
+                runOnUiThread {
+                    binding.proceedButton.isEnabled = true
+                    updatePaymentAmounts()
                     Toast.makeText(
                         this@ClientCreateBookingsActivity,
-                        "Booking created but invoice failed: ${error.message}",
+                        "Error: ${e.message}",
                         Toast.LENGTH_LONG
                     ).show()
-                    binding.proceedButton.isEnabled = true
-                    updatePaymentButton()
                 }
-            }.onFailure { error ->
-                Toast.makeText(
-                    this@ClientCreateBookingsActivity,
-                    "Failed to create booking: ${error.message}",
-                    Toast.LENGTH_LONG
-                ).show()
-                binding.proceedButton.isEnabled = true
-                updatePaymentButton()
             }
         }
     }
 
-    private fun getSelectedPaymentMethod(): String {
-        return when {
-            binding.payfastRadio.isChecked -> "Credit Card" // PayFast supports cards
-            binding.ozowRadio.isChecked -> "Bank Transfer" // Ozow is instant EFT
-            binding.stripeRadio.isChecked -> "Credit Card" // Stripe supports cards
-            else -> "Credit Card"
+    private suspend fun initiatePaymentGateway(
+        bookingId: Int,
+        invoiceId: Int,
+        amount: Double,
+        clientName: String,
+        clientEmail: String
+    ) {
+        val testType = selectedTestType!!
+        val description = "${testType.testName} - Polygraph Test Payment"
+
+        val result = when (selectedPaymentGateway) {
+            PaymentGateway.PAYFAST -> DatabaseHelper.initiatePayFastPayment(
+                bookingId, invoiceId, amount, description, clientName, clientEmail
+            )
+            PaymentGateway.OZOW -> DatabaseHelper.initiateOzowPayment(
+                bookingId, invoiceId, amount, description, clientName, clientEmail
+            )
+            PaymentGateway.STRIPE -> DatabaseHelper.initiateStripePayment(
+                bookingId, invoiceId, amount, description, clientName, clientEmail
+            )
+        }
+
+        result.onSuccess { paymentInitiation ->
+            runOnUiThread {
+                when (selectedPaymentGateway) {
+                    PaymentGateway.PAYFAST -> openPayFastPayment(paymentInitiation)
+                    PaymentGateway.OZOW -> openOzowPayment(paymentInitiation)
+                    PaymentGateway.STRIPE -> openStripePayment(paymentInitiation)
+                }
+            }
+        }.onFailure { error ->
+            runOnUiThread {
+                binding.proceedButton.isEnabled = true
+                updatePaymentAmounts()
+                Toast.makeText(
+                    this@ClientCreateBookingsActivity,
+                    "Failed to initiate payment: ${error.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
-    private fun getSelectedPaymentGateway(): String {
-        return when {
-            binding.payfastRadio.isChecked -> "PayFast"
-            binding.ozowRadio.isChecked -> "Ozow"
-            binding.stripeRadio.isChecked -> "Stripe"
-            else -> "PayFast"
+    private fun openPayFastPayment(paymentInitiation: com.example.insy_7315.models.PaymentInitiation) {
+        val params = paymentInitiation.paymentData.entries.joinToString("&") { (key, value) ->
+            "$key=${Uri.encode(value)}"
+        }
+        val url = "${paymentInitiation.paymentUrl}?$params"
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+        finish()
+    }
+
+    private fun openOzowPayment(paymentInitiation: com.example.insy_7315.models.PaymentInitiation) {
+        val params = paymentInitiation.paymentData.entries.joinToString("&") { (key, value) ->
+            "$key=${Uri.encode(value)}"
+        }
+        val url = "${paymentInitiation.paymentUrl}?$params"
+
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        startActivity(intent)
+        finish()
+    }
+
+    private fun openStripePayment(paymentInitiation: com.example.insy_7315.models.PaymentInitiation) {
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(paymentInitiation.paymentUrl))
+        startActivity(intent)
+        finish()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleDeepLink(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        handleDeepLink(intent)
+    }
+
+    private fun handleDeepLink(intent: Intent?) {
+        intent?.data?.let { uri ->
+            if (uri.scheme == "key-polygraph" && uri.host == "payment") {
+                when (uri.lastPathSegment) {
+                    "success" -> {
+                        Toast.makeText(this, "Payment successful!", Toast.LENGTH_LONG).show()
+                        val newIntent = Intent(this, ClientPortalActivity::class.java)
+                        newIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(newIntent)
+                        finish()
+                    }
+                    "cancel" -> {
+                        Toast.makeText(this, "Payment cancelled", Toast.LENGTH_SHORT).show()
+                        binding.proceedButton.isEnabled = true
+                        updatePaymentAmounts()
+                    }
+                    "error" -> {
+                        Toast.makeText(this, "Payment error occurred", Toast.LENGTH_LONG).show()
+                        binding.proceedButton.isEnabled = true
+                        updatePaymentAmounts()
+                    }
+                }
+            }
         }
     }
 }

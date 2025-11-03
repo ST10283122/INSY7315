@@ -1,5 +1,7 @@
 package com.example.insy_7315
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -7,7 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.insy_7315.database.DatabaseHelper
-import com.example.insy_7315.databinding.ClientDetailsBookingsBinding // Changed this line
+import com.example.insy_7315.databinding.ClientDetailsBookingsBinding
 import com.example.insy_7315.models.Booking
 import com.example.insy_7315.utils.SessionManager
 import kotlinx.coroutines.launch
@@ -15,7 +17,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class BookingDetailsActivity : AppCompatActivity() {
-    private lateinit var binding: ClientDetailsBookingsBinding // Changed this line
+    private lateinit var binding: ClientDetailsBookingsBinding
     private lateinit var sessionManager: SessionManager
     private var booking: Booking? = null
     private var invoiceId: Int? = null
@@ -23,7 +25,7 @@ class BookingDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ClientDetailsBookingsBinding.inflate(layoutInflater) // Changed this line
+        binding = ClientDetailsBookingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         sessionManager = SessionManager(this)
@@ -43,7 +45,7 @@ class BookingDetailsActivity : AppCompatActivity() {
         binding.backButton.setOnClickListener { finish() }
 
         binding.payBalanceButton.setOnClickListener {
-            payBalance()
+            payWithStripe()
         }
 
         binding.rescheduleButton.setOnClickListener {
@@ -153,13 +155,13 @@ class BookingDetailsActivity : AppCompatActivity() {
 
         if (balance > 0) {
             binding.payBalanceButton.visibility = View.VISIBLE
-            binding.payBalanceButton.text = "PAY BALANCE (R ${String.format("%.2f", balance)})"
+            binding.payBalanceButton.text = "PAY WITH STRIPE (R ${String.format("%.2f", balance)})"
         } else {
             binding.payBalanceButton.visibility = View.GONE
         }
     }
 
-    private fun payBalance() {
+    private fun payWithStripe() {
         val currentBooking = booking ?: return
         val currentInvoiceId = invoiceId ?: return
         val user = sessionManager.getUser() ?: return
@@ -170,38 +172,44 @@ class BookingDetailsActivity : AppCompatActivity() {
         }
 
         binding.payBalanceButton.isEnabled = false
-        binding.payBalanceButton.text = "PROCESSING..."
+        binding.payBalanceButton.text = "INITIATING PAYMENT..."
 
         lifecycleScope.launch {
-            val paymentResult = DatabaseHelper.createPayment(
-                invoiceId = currentInvoiceId,
+            val paymentResult = DatabaseHelper.initiateStripePayment(
                 bookingId = currentBooking.bookingId,
-                paymentAmount = remainingBalance,
-                paymentMethod = "Credit Card",
-                paymentType = "Balance Payment",
-                transactionId = "SIM_${System.currentTimeMillis()}",
-                paymentGateway = "Simulated",
-                notes = "Balance payment (Simulated)",
-                createdBy = user.userId
+                invoiceId = currentInvoiceId,
+                amount = remainingBalance,
+                description = "Polygraph Test - ${currentBooking.testName ?: "Service"}",
+                clientName = user.fullName,
+                clientEmail = user.email
             )
 
-            paymentResult.onSuccess { payment ->
+            paymentResult.onSuccess { paymentInitiation ->
+                // Open Stripe Checkout in browser
+                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(paymentInitiation.paymentUrl))
+                startActivity(intent)
+
                 Toast.makeText(
                     this@BookingDetailsActivity,
-                    "Payment successful!\nReference: ${payment.paymentReference}",
+                    "Opening Stripe payment page...",
                     Toast.LENGTH_LONG
                 ).show()
 
-                loadPaymentInfo(currentBooking.bookingId)
-                binding.payBalanceButton.isEnabled = true
+                // Re-enable button after a delay
+                lifecycleScope.launch {
+                    kotlinx.coroutines.delay(3000) // Wait 3 seconds
+                    binding.payBalanceButton.isEnabled = true
+                    binding.payBalanceButton.text = "PAY WITH STRIPE (R ${String.format("%.2f", remainingBalance)})"
+                }
+
             }.onFailure { error ->
                 Toast.makeText(
                     this@BookingDetailsActivity,
-                    "Payment failed: ${error.message}",
+                    "Payment initiation failed: ${error.message}",
                     Toast.LENGTH_LONG
                 ).show()
                 binding.payBalanceButton.isEnabled = true
-                binding.payBalanceButton.text = "PAY BALANCE (R ${String.format("%.2f", remainingBalance)})"
+                binding.payBalanceButton.text = "PAY WITH STRIPE (R ${String.format("%.2f", remainingBalance)})"
             }
         }
     }

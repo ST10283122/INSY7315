@@ -6,49 +6,37 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
-import java.net.HttpURLConnection
-import java.net.URL
+import androidx.annotation.VisibleForTesting
 
 object DatabaseHelper {
     private const val TAG = "DatabaseHelper"
-    private const val BASE_URL = "http://192.168.1.35:3000/api"
+    const val BASE_URL = "http://192.168.1.35:3000/api"
 
-    private suspend fun makeRequest(
-        endpoint: String,
-        method: String,
-        body: JSONObject? = null
-    ): Result<JSONObject> = withContext(Dispatchers.IO) {
+    // Injectible HTTP client - defaults to real implementation
+    var httpClient: HttpClient = RealHttpClient(BASE_URL)
+
+    data class StripeConfig(
+        val publishableKey: String,
+        val currency: String,
+        val country: String
+    )
+
+    suspend fun getStripeConfig(): Result<StripeConfig> = withContext(Dispatchers.IO) {
         try {
-            val url = URL("$BASE_URL/$endpoint")
-            val connection = url.openConnection() as HttpURLConnection
+            val result = httpClient.request("config/stripe", "GET")
 
-            connection.requestMethod = method
-            connection.setRequestProperty("Content-Type", "application/json")
-            connection.connectTimeout = 10000
-            connection.readTimeout = 10000
-
-            if (body != null && (method == "POST" || method == "PUT" || method == "PATCH")) {
-                connection.doOutput = true
-                connection.outputStream.write(body.toString().toByteArray())
-            }
-
-            val responseCode = connection.responseCode
-            val inputStream = if (responseCode in 200..299) {
-                connection.inputStream
-            } else {
-                connection.errorStream
-            }
-
-            val response = inputStream.bufferedReader().use { it.readText() }
-            val jsonResponse = JSONObject(response)
-
-            if (responseCode in 200..299) {
-                Result.success(jsonResponse)
-            } else {
-                Result.failure(Exception(jsonResponse.optString("error", "Request failed")))
-            }
+            result.fold(
+                onSuccess = { json ->
+                    Result.success(StripeConfig(
+                        publishableKey = json.getString("publishableKey"),
+                        currency = json.optString("currency", "ZAR"),
+                        country = json.optString("country", "ZA")
+                    ))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
         } catch (e: Exception) {
-            Log.e(TAG, "Request failed", e)
+            Log.e(TAG, "Get Stripe config failed", e)
             Result.failure(e)
         }
     }
@@ -68,7 +56,6 @@ object DatabaseHelper {
         specialization: String? = null
     ): Result<User> = withContext(Dispatchers.IO) {
         try {
-            // Build JSON body dynamically
             val body = JSONObject().apply {
                 put("fullName", fullName)
                 put("email", email)
@@ -76,35 +63,18 @@ object DatabaseHelper {
                 put("password", passwordHash)
                 put("userRole", userRole)
                 put("termsAccepted", termsAccepted)
-
-                // Only include optional fields if non-null
                 address?.let { put("address", it) }
                 certification?.let { put("certification", it) }
                 licenseNumber?.let { put("licenseNumber", it) }
                 specialization?.let { put("specialization", it) }
             }
 
-            val result = makeRequest("register", "POST", body)
+            val result = httpClient.request("register", "POST", body)
 
             result.fold(
                 onSuccess = { json ->
                     val userJson = json.getJSONObject("user")
-
-                    Result.success(
-                        User(
-                            userId = userJson.getInt("UserID"),
-                            fullName = userJson.getString("FullName"),
-                            email = userJson.getString("Email"),
-                            phone = userJson.optString("Phone", null),
-                            userRole = userJson.getString("UserRole"),
-                            termsAccepted = userJson.optBoolean("TermsAccepted"),
-                            address = userJson.optString("Address", null),
-                            certification = userJson.optString("Certification", null),
-                            licenseNumber = userJson.optString("LicenseNumber", null),
-                            specialization = userJson.optString("Specialization", null),
-                            accountStatus = userJson.getString("AccountStatus")
-                        )
-                    )
+                    Result.success(parseUser(userJson))
                 },
                 onFailure = { error -> Result.failure(error) }
             )
@@ -121,24 +91,12 @@ object DatabaseHelper {
                 put("password", password)
             }
 
-            val result = makeRequest("login", "POST", body)
+            val result = httpClient.request("login", "POST", body)
 
             result.fold(
                 onSuccess = { json ->
                     val userJson = json.getJSONObject("user")
-                    Result.success(User(
-                        userId = userJson.getInt("UserID"),
-                        fullName = userJson.getString("FullName"),
-                        email = userJson.getString("Email"),
-                        phone = userJson.optString("Phone", null),
-                        userRole = userJson.getString("UserRole"),
-                        termsAccepted = userJson.optBoolean("TermsAccepted"),
-                        address = userJson.optString("Address", null),
-                        certification = userJson.optString("Certification", null),
-                        licenseNumber = userJson.optString("LicenseNumber", null),
-                        specialization = userJson.optString("Specialization", null),
-                        accountStatus = userJson.getString("AccountStatus")
-                    ))
+                    Result.success(parseUser(userJson))
                 },
                 onFailure = { error -> Result.failure(error) }
             )
@@ -150,24 +108,12 @@ object DatabaseHelper {
 
     suspend fun getUserById(userId: Int): Result<User> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("users/$userId", "GET")
+            val result = httpClient.request("users/$userId", "GET")
 
             result.fold(
                 onSuccess = { json ->
                     val userJson = json.getJSONObject("user")
-                    Result.success(User(
-                        userId = userJson.getInt("UserID"),
-                        fullName = userJson.getString("FullName"),
-                        email = userJson.getString("Email"),
-                        phone = userJson.optString("Phone", null),
-                        userRole = userJson.getString("UserRole"),
-                        termsAccepted = userJson.optBoolean("TermsAccepted"),
-                        address = userJson.optString("Address", null),
-                        certification = userJson.optString("Certification", null),
-                        licenseNumber = userJson.optString("LicenseNumber", null),
-                        specialization = userJson.optString("Specialization", null),
-                        accountStatus = userJson.getString("AccountStatus")
-                    ))
+                    Result.success(parseUser(userJson))
                 },
                 onFailure = { error -> Result.failure(error) }
             )
@@ -179,7 +125,7 @@ object DatabaseHelper {
 
     suspend fun getAllUsers(): Result<List<User>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("users", "GET")
+            val result = httpClient.request("users", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -188,19 +134,7 @@ object DatabaseHelper {
 
                     for (i in 0 until usersArray.length()) {
                         val userJson = usersArray.getJSONObject(i)
-                        users.add(User(
-                            userId = userJson.getInt("UserID"),
-                            fullName = userJson.getString("FullName"),
-                            email = userJson.getString("Email"),
-                            phone = userJson.optString("Phone", null),
-                            userRole = userJson.getString("UserRole"),
-                            termsAccepted = userJson.optBoolean("TermsAccepted"),
-                            address = userJson.optString("Address", null),
-                            certification = userJson.optString("Certification", null),
-                            licenseNumber = userJson.optString("LicenseNumber", null),
-                            specialization = userJson.optString("Specialization", null),
-                            accountStatus = userJson.getString("AccountStatus")
-                        ))
+                        users.add(parseUser(userJson))
                     }
 
                     Result.success(users)
@@ -238,24 +172,12 @@ object DatabaseHelper {
                 accountStatus?.let { put("accountStatus", it) }
             }
 
-            val result = makeRequest("users/$userId", "PATCH", body)
+            val result = httpClient.request("users/$userId", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
                     val userJson = json.getJSONObject("user")
-                    Result.success(User(
-                        userId = userJson.getInt("UserID"),
-                        fullName = userJson.getString("FullName"),
-                        email = userJson.getString("Email"),
-                        phone = userJson.optString("Phone", null),
-                        userRole = userJson.getString("UserRole"),
-                        termsAccepted = userJson.optBoolean("TermsAccepted"),
-                        address = userJson.optString("Address", null),
-                        certification = userJson.optString("Certification", null),
-                        licenseNumber = userJson.optString("LicenseNumber", null),
-                        specialization = userJson.optString("Specialization", null),
-                        accountStatus = userJson.getString("AccountStatus")
-                    ))
+                    Result.success(parseUser(userJson))
                 },
                 onFailure = { error -> Result.failure(error) }
             )
@@ -274,7 +196,7 @@ object DatabaseHelper {
                 put("newPassword", newPassword)
             }
 
-            val result = makeRequest("users/$userId/reset-password", "PATCH", body)
+            val result = httpClient.request("users/$userId/reset-password", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -290,7 +212,7 @@ object DatabaseHelper {
 
     suspend fun deleteUser(userId: Int): Result<String> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("users/$userId", "DELETE")
+            val result = httpClient.request("users/$userId", "DELETE")
 
             result.fold(
                 onSuccess = { json ->
@@ -310,7 +232,7 @@ object DatabaseHelper {
 
     suspend fun getTestTypes(): Result<List<TestType>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("test-types", "GET")
+            val result = httpClient.request("test-types", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -341,7 +263,7 @@ object DatabaseHelper {
 
     suspend fun getTestTypeById(testTypeId: Int): Result<TestType> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("test-types/$testTypeId", "GET")
+            val result = httpClient.request("test-types/$testTypeId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -387,7 +309,7 @@ object DatabaseHelper {
                 put("depositRequired", depositRequired)
             }
 
-            val result = makeRequest("bookings", "POST", body)
+            val result = httpClient.request("bookings", "POST", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -404,7 +326,7 @@ object DatabaseHelper {
 
     suspend fun getBookingsByClient(clientId: Int): Result<List<Booking>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("bookings/client/$clientId", "GET")
+            val result = httpClient.request("bookings/client/$clientId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -428,7 +350,7 @@ object DatabaseHelper {
 
     suspend fun getBookingById(bookingId: Int): Result<Booking> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("bookings/$bookingId", "GET")
+            val result = httpClient.request("bookings/$bookingId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -454,7 +376,7 @@ object DatabaseHelper {
                 put("updatedBy", updatedBy)
             }
 
-            val result = makeRequest("bookings/$bookingId/status", "PATCH", body)
+            val result = httpClient.request("bookings/$bookingId/status", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -480,7 +402,7 @@ object DatabaseHelper {
                 put("cancelledBy", cancelledBy)
             }
 
-            val result = makeRequest("bookings/$bookingId/cancel", "PATCH", body)
+            val result = httpClient.request("bookings/$bookingId/cancel", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -497,7 +419,7 @@ object DatabaseHelper {
 
     suspend fun getAllBookings(): Result<List<Booking>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("bookings/all", "GET")
+            val result = httpClient.request("bookings/all", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -534,7 +456,7 @@ object DatabaseHelper {
                 put("updatedBy", updatedBy)
             }
 
-            val result = makeRequest("bookings/$bookingId/assign", "PATCH", body)
+            val result = httpClient.request("bookings/$bookingId/assign", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -551,7 +473,7 @@ object DatabaseHelper {
 
     suspend fun getBookingsByEmployee(employeeId: Int): Result<List<Booking>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("bookings/employee/$employeeId", "GET")
+            val result = httpClient.request("bookings/employee/$employeeId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -606,7 +528,7 @@ object DatabaseHelper {
                 }
             }
 
-            val result = makeRequest("invoices", "POST", body)
+            val result = httpClient.request("invoices", "POST", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -623,7 +545,7 @@ object DatabaseHelper {
 
     suspend fun getInvoiceById(invoiceId: Int): Result<Invoice> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("invoices/$invoiceId", "GET")
+            val result = httpClient.request("invoices/$invoiceId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -640,7 +562,7 @@ object DatabaseHelper {
 
     suspend fun getInvoicesByBooking(bookingId: Int): Result<List<Invoice>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("invoices/booking/$bookingId", "GET")
+            val result = httpClient.request("invoices/booking/$bookingId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -664,7 +586,7 @@ object DatabaseHelper {
 
     suspend fun getInvoiceBalance(invoiceId: Int): Result<InvoiceBalance> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("invoices/$invoiceId/balance", "GET")
+            val result = httpClient.request("invoices/$invoiceId/balance", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -710,7 +632,7 @@ object DatabaseHelper {
                 put("createdBy", createdBy)
             }
 
-            val result = makeRequest("payments", "POST", body)
+            val result = httpClient.request("payments", "POST", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -727,7 +649,7 @@ object DatabaseHelper {
 
     suspend fun getPaymentsByInvoice(invoiceId: Int): Result<List<Payment>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("payments/invoice/$invoiceId", "GET")
+            val result = httpClient.request("payments/invoice/$invoiceId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -751,7 +673,7 @@ object DatabaseHelper {
 
     suspend fun getPaymentsByBooking(bookingId: Int): Result<List<Payment>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("payments/booking/$bookingId", "GET")
+            val result = httpClient.request("payments/booking/$bookingId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -813,7 +735,7 @@ object DatabaseHelper {
                 put("createdBy", createdBy)
             }
 
-            val result = makeRequest("tests", "POST", body)
+            val result = httpClient.request("tests", "POST", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -830,7 +752,7 @@ object DatabaseHelper {
 
     suspend fun getTestById(testId: Int): Result<Test> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("tests/$testId", "GET")
+            val result = httpClient.request("tests/$testId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -847,7 +769,7 @@ object DatabaseHelper {
 
     suspend fun getAllTests(): Result<List<Test>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("tests", "GET")
+            val result = httpClient.request("tests", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -871,7 +793,7 @@ object DatabaseHelper {
 
     suspend fun getTestByBooking(bookingId: Int): Result<Test> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("tests/booking/$bookingId", "GET")
+            val result = httpClient.request("tests/booking/$bookingId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -888,7 +810,7 @@ object DatabaseHelper {
 
     suspend fun getTestsByClient(clientId: Int): Result<List<Test>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("tests/client/$clientId", "GET")
+            val result = httpClient.request("tests/client/$clientId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -912,7 +834,7 @@ object DatabaseHelper {
 
     suspend fun getTestsByEmployee(employeeId: Int): Result<List<Test>> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("tests/employee/$employeeId", "GET")
+            val result = httpClient.request("tests/employee/$employeeId", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -967,7 +889,7 @@ object DatabaseHelper {
                 updatedBy?.let { put("updatedBy", it) }
             }
 
-            val result = makeRequest("tests/$testId", "PATCH", body)
+            val result = httpClient.request("tests/$testId", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -991,7 +913,7 @@ object DatabaseHelper {
                 put("updatedBy", updatedBy)
             }
 
-            val result = makeRequest("tests/$testId/complete", "PATCH", body)
+            val result = httpClient.request("tests/$testId/complete", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -1015,7 +937,7 @@ object DatabaseHelper {
                 put("releasedBy", releasedBy)
             }
 
-            val result = makeRequest("tests/$testId/release", "PATCH", body)
+            val result = httpClient.request("tests/$testId/release", "PATCH", body)
 
             result.fold(
                 onSuccess = { json ->
@@ -1032,7 +954,7 @@ object DatabaseHelper {
 
     suspend fun getTestReport(testId: Int): Result<TestReport> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("tests/$testId/report", "GET")
+            val result = httpClient.request("tests/$testId/report", "GET")
 
             result.fold(
                 onSuccess = { json ->
@@ -1067,7 +989,7 @@ object DatabaseHelper {
 
     suspend fun deleteTest(testId: Int): Result<String> = withContext(Dispatchers.IO) {
         try {
-            val result = makeRequest("tests/$testId", "DELETE")
+            val result = httpClient.request("tests/$testId", "DELETE")
 
             result.fold(
                 onSuccess = { json ->
@@ -1081,9 +1003,160 @@ object DatabaseHelper {
         }
     }
 
-    // ============= HELPER FUNCTIONS =============
+    // ============= PAYMENT INITIATION FUNCTIONS =============
 
-    private fun parseBooking(json: JSONObject): Booking {
+    suspend fun initiatePayFastPayment(
+        bookingId: Int,
+        invoiceId: Int,
+        amount: Double,
+        description: String,
+        clientName: String,
+        clientEmail: String
+    ): Result<PaymentInitiation> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("bookingId", bookingId)
+                put("invoiceId", invoiceId)
+                put("amount", amount)
+                put("description", description)
+                put("clientName", clientName)
+                put("clientEmail", clientEmail)
+            }
+
+            val result = httpClient.request("payments/payfast/initiate", "POST", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val paymentUrl = json.getString("paymentUrl")
+                    val paymentData = json.getJSONObject("paymentData")
+                    val paymentReference = json.getString("paymentReference")
+
+                    val dataMap = mutableMapOf<String, String>()
+                    paymentData.keys().forEach { key ->
+                        dataMap[key] = paymentData.getString(key)
+                    }
+
+                    Result.success(PaymentInitiation(
+                        paymentUrl = paymentUrl,
+                        paymentData = dataMap,
+                        paymentReference = paymentReference,
+                        sessionId = null
+                    ))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "PayFast initiate failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun initiateOzowPayment(
+        bookingId: Int,
+        invoiceId: Int,
+        amount: Double,
+        description: String,
+        clientName: String,
+        clientEmail: String
+    ): Result<PaymentInitiation> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("bookingId", bookingId)
+                put("invoiceId", invoiceId)
+                put("amount", amount)
+                put("description", description)
+                put("clientName", clientName)
+                put("clientEmail", clientEmail)
+            }
+
+            val result = httpClient.request("payments/ozow/initiate", "POST", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val paymentUrl = json.getString("paymentUrl")
+                    val paymentData = json.getJSONObject("paymentData")
+                    val paymentReference = json.getString("paymentReference")
+
+                    val dataMap = mutableMapOf<String, String>()
+                    paymentData.keys().forEach { key ->
+                        dataMap[key] = paymentData.get(key).toString()
+                    }
+
+                    Result.success(PaymentInitiation(
+                        paymentUrl = paymentUrl,
+                        paymentData = dataMap,
+                        paymentReference = paymentReference,
+                        sessionId = null
+                    ))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Ozow initiate failed", e)
+            Result.failure(e)
+        }
+    }
+
+    suspend fun initiateStripePayment(
+        bookingId: Int,
+        invoiceId: Int,
+        amount: Double,
+        description: String,
+        clientName: String,
+        clientEmail: String
+    ): Result<PaymentInitiation> = withContext(Dispatchers.IO) {
+        try {
+            val body = JSONObject().apply {
+                put("bookingId", bookingId)
+                put("invoiceId", invoiceId)
+                put("amount", amount)
+                put("description", description)
+                put("clientName", clientName)
+                put("clientEmail", clientEmail)
+            }
+
+            val result = httpClient.request("payments/stripe/initiate", "POST", body)
+
+            result.fold(
+                onSuccess = { json ->
+                    val sessionId = json.getString("sessionId")
+                    val paymentUrl = json.getString("paymentUrl")
+                    val paymentReference = json.getString("paymentReference")
+
+                    Result.success(PaymentInitiation(
+                        paymentUrl = paymentUrl,
+                        paymentData = emptyMap(),
+                        paymentReference = paymentReference,
+                        sessionId = sessionId
+                    ))
+                },
+                onFailure = { error -> Result.failure(error) }
+            )
+        } catch (e: Exception) {
+            Log.e(TAG, "Stripe initiate failed", e)
+            Result.failure(e)
+        }
+    }
+
+    @VisibleForTesting
+    internal fun parseUser(json: JSONObject): User {
+        return User(
+            userId = json.getInt("UserID"),
+            fullName = json.getString("FullName"),
+            email = json.getString("Email"),
+            phone = json.optString("Phone", null),
+            userRole = json.getString("UserRole"),
+            termsAccepted = json.optBoolean("TermsAccepted"),
+            address = json.optString("Address", null),
+            certification = json.optString("Certification", null),
+            licenseNumber = json.optString("LicenseNumber", null),
+            specialization = json.optString("Specialization", null),
+            accountStatus = json.getString("AccountStatus")
+        )
+    }
+
+    @VisibleForTesting
+    internal fun parseBooking(json: JSONObject): Booking {
         return Booking(
             bookingId = json.getInt("BookingID"),
             bookingReference = json.getString("BookingReference"),
@@ -1105,7 +1178,8 @@ object DatabaseHelper {
         )
     }
 
-    private fun parseInvoice(json: JSONObject): Invoice {
+    @VisibleForTesting
+    internal fun parseInvoice(json: JSONObject): Invoice {
         return Invoice(
             invoiceId = json.getInt("InvoiceID"),
             bookingId = json.getInt("BookingID"),
@@ -1120,7 +1194,8 @@ object DatabaseHelper {
         )
     }
 
-    private fun parsePayment(json: JSONObject): Payment {
+    @VisibleForTesting
+    internal fun parsePayment(json: JSONObject): Payment {
         return Payment(
             paymentId = json.getInt("PaymentID"),
             invoiceId = json.getInt("InvoiceID"),
@@ -1135,7 +1210,8 @@ object DatabaseHelper {
         )
     }
 
-    private fun parseTest(json: JSONObject): Test {
+    @VisibleForTesting
+    internal fun parseTest(json: JSONObject): Test {
         return Test(
             testId = json.getInt("TestID"),
             bookingId = json.getInt("BookingID"),
@@ -1163,5 +1239,4 @@ object DatabaseHelper {
             employeeName = json.optString("EmployeeName", null),
             testName = json.optString("TestName", null)
         )
-    }
-}
+    }}

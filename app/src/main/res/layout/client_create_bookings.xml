@@ -444,7 +444,7 @@
                 android:text="Pay Full Amount Now"
                 android:textColor="#FFFFFF"
                 android:buttonTint="#D4AF37"
-                android:layout_marginTop="12dp"/>
+                android:layout_marginTop="12px"/>
         </RadioGroup>
 
         <!-- Payment Method Label -->
@@ -461,7 +461,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="24dp"/>
 
-        <!-- Payment Options -->
+        <!-- Payment Options - FIXED: Simple RadioGroup without nested layouts -->
         <RadioGroup
             android:id="@+id/paymentMethodGroup"
             android:layout_width="0dp"
@@ -472,148 +472,40 @@
             android:layout_marginTop="16dp">
 
             <!-- PayFast Option -->
-            <androidx.cardview.widget.CardView
+            <RadioButton
+                android:id="@+id/payfastRadio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <RadioButton
-                        android:id="@+id/payfastRadio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="#D4AF37"
-                        android:checked="true"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="PayFast"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Instant EFT, Credit/Debit Card"
-                            android:textSize="12sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:text="PayFast - Instant EFT, Credit/Debit Card"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#D4AF37"
+                android:background="@drawable/radio_button_background"
+                android:padding="16dp"
+                android:checked="true"/>
 
             <!-- Ozow Option -->
-            <androidx.cardview.widget.CardView
+            <RadioButton
+                android:id="@+id/ozowRadio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <RadioButton
-                        android:id="@+id/ozowRadio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="#D4AF37"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Ozow"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Instant Bank Transfer"
-                            android:textSize="12sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:text="Ozow - Instant Bank Transfer"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#D4AF37"
+                android:background="@drawable/radio_button_background"
+                android:padding="16dp"
+                android:layout_marginTop="12dp"/>
 
             <!-- Stripe Option -->
-            <androidx.cardview.widget.CardView
+            <RadioButton
+                android:id="@+id/stripeRadio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#1A1A1A"
-                app:cardElevation="2dp"
-                app:cardCornerRadius="8dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <RadioButton
-                        android:id="@+id/stripeRadio"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="#D4AF37"/>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:layout_marginStart="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Stripe"
-                            android:textSize="16sp"
-                            android:textColor="#FFFFFF"
-                            android:fontFamily="sans-serif-medium"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Credit/Debit Card, International"
-                            android:textSize="12sp"
-                            android:textColor="#999999"
-                            android:layout_marginTop="2dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </androidx.cardview.widget.CardView>
+                android:text="Stripe - Credit/Debit Card, International"
+                android:textColor="#FFFFFF"
+                android:buttonTint="#D4AF37"
+                android:background="@drawable/radio_button_background"
+                android:padding="16dp"
+                android:layout_marginTop="12dp"/>
 
         </RadioGroup>
 
