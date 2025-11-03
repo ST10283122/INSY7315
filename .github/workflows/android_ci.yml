@@ -112,7 +112,7 @@ jobs:
         run: ./gradlew testDebugUnitTest --tests '*' --tests '!*.testTimingAttackResistance' --tests '!*.testVerifyPassword_malformedHex_returnsFalse'
 
       - name: Generate Jacoco report
-        run: ./gradlew testDebugUnitTestCoverage
+        run: ./gradlew jacocoTestReport
 
       - name: Check if Jacoco reports exist
         run: |
@@ -128,7 +128,7 @@ jobs:
         if: always()
         with:
           name: jacoco-report
-          path: app/build/reports/jacoco/testDebugUnitTestCoverage/
+          path: app/build/reports/jacoco/jacocoTestReport/html/
 
   lint-check:
     runs-on: ubuntu-latest
