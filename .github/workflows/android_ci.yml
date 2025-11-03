@@ -218,13 +218,16 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-        if: env.SONAR_TOKEN != ''
+          SONAR_ORG: ${{ secrets.SONAR_ORG }}
         run: |
           ./gradlew sonar \
             -Dsonar.projectKey=ST10283122_INSY7315 \
             -Dsonar.projectName='INSY7315 Android Project' \
-            -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+            -Dsonar.organization=${SONAR_ORG} \
+            -Dsonar.host.url=${SONAR_HOST_URL} \
+            -Dsonar.login=${SONAR_TOKEN} \
+            -Dsonar.gradle.skipCompile=true
+
 
   security-scan:
     runs-on: ubuntu-latest
@@ -250,6 +253,8 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Run OWASP Dependency Check
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
         run: |
           ./gradlew dependencyCheckAnalyze || echo "Dependency check completed with warnings"
         continue-on-error: true
