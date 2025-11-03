@@ -28,14 +28,17 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Create local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+      - name: Install Dependency-Check CLI
+        run: |
+          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v8.1.1/dependency-check-8.1.1-release.zip -o dependency-check.zip
+          unzip dependency-check.zip
+          export PATH="$PWD/dependency-check/bin:$PATH"
+
       - name: Run OWASP Dependency Check
-        uses: dependency-check/Dependency-Check_Action@main
-        with:
-          project: 'INSY7315-android-app'
-          path: '.'
-          format: 'HTML'
-          out: 'app/build/reports/dependency-check'
-          args: '--noupdate'
+        run: dependency-check.sh --project INSY7315-android-app --scan . --format HTML --out app/build/reports/dependency-check --noupdate
 
       - name: Upload dependency check report
         uses: actions/upload-artifact@v4
@@ -101,8 +104,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Generate Jacoco coverage report
         run: ./gradlew testCoverageReport
@@ -137,8 +139,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Cache SonarQube packages
         uses: actions/cache@v3
@@ -148,8 +149,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: Build and run tests with coverage
-        run: |
-          ./gradlew clean testDebugUnitTest testCoverageReport
+        run: ./gradlew clean testDebugUnitTest testCoverageReport
 
       - name: Build and analyze with SonarQube
         env:
@@ -177,6 +177,9 @@ jobs:
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
+
+      - name: Create local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Run Gradle Dependency Vulnerability Check
         run: ./gradlew dependencyCheckAnalyze
@@ -262,12 +265,10 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Run instrumentation tests
-        run: |
-          ./gradlew connectedDebugAndroidTest
+        run: ./gradlew connectedDebugAndroidTest
 
       - name: Upload integration test results
         uses: actions/upload-artifact@v4
@@ -296,8 +297,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create local.properties
-        run: |
-          echo "sdk.dir=$ANDROID_HOME" > local.properties
+        run: echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Run lint checks
         run: ./gradlew lintDebug
