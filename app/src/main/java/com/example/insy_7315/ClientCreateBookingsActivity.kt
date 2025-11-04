@@ -29,7 +29,6 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
     private var selectedTime: String? = null
     private var selectedLocation: String? = null
     private var testTypes = listOf<TestType>()
-    private var selectedPaymentGateway: PaymentGateway = PaymentGateway.PAYFAST
     private var selectedPaymentOption: PaymentOption = PaymentOption.DEPOSIT
 
     private val locations = listOf(
@@ -84,24 +83,10 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
             }
             updatePaymentAmounts()
         }
-
-        binding.payfastRadio.setOnClickListener {
-            selectedPaymentGateway = PaymentGateway.PAYFAST
-        }
-
-        binding.ozowRadio.setOnClickListener {
-            selectedPaymentGateway = PaymentGateway.OZOW
-        }
-
-        binding.stripeRadio.setOnClickListener {
-            selectedPaymentGateway = PaymentGateway.STRIPE
-        }
     }
 
     private fun setupPaymentOptions() {
-        binding.payfastRadio.isChecked = true
         binding.depositRadio.isChecked = true
-        selectedPaymentGateway = PaymentGateway.PAYFAST
         selectedPaymentOption = PaymentOption.DEPOSIT
     }
 
@@ -277,12 +262,6 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
             PaymentOption.FULL -> baseFee
         }
 
-        val gatewayName = when (selectedPaymentGateway) {
-            PaymentGateway.PAYFAST -> "PayFast"
-            PaymentGateway.OZOW -> "Ozow"
-            PaymentGateway.STRIPE -> "Stripe"
-        }
-
         val message = """
             Test Type: ${testType.testName}
             Date: ${binding.dateInput.text}
@@ -295,7 +274,7 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
         else
             "Full Payment: R ${String.format("%.2f", baseFee)}"}
             
-            Payment Gateway: $gatewayName
+            Payment Method: Stripe (Credit/Debit Card)
             
             Continue to payment?
         """.trimIndent()
@@ -357,7 +336,7 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
                             PaymentOption.FULL -> baseFee
                         }
 
-                        initiatePaymentGateway(
+                        initiateStripePayment(
                             bookingId = booking.bookingId,
                             invoiceId = invoice.invoiceId,
                             amount = paymentAmount,
@@ -400,7 +379,7 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
         }
     }
 
-    private suspend fun initiatePaymentGateway(
+    private suspend fun initiateStripePayment(
         bookingId: Int,
         invoiceId: Int,
         amount: Double,
@@ -410,25 +389,13 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
         val testType = selectedTestType!!
         val description = "${testType.testName} - Polygraph Test Payment"
 
-        val result = when (selectedPaymentGateway) {
-            PaymentGateway.PAYFAST -> DatabaseHelper.initiatePayFastPayment(
-                bookingId, invoiceId, amount, description, clientName, clientEmail
-            )
-            PaymentGateway.OZOW -> DatabaseHelper.initiateOzowPayment(
-                bookingId, invoiceId, amount, description, clientName, clientEmail
-            )
-            PaymentGateway.STRIPE -> DatabaseHelper.initiateStripePayment(
-                bookingId, invoiceId, amount, description, clientName, clientEmail
-            )
-        }
+        val result = DatabaseHelper.initiateStripePayment(
+            bookingId, invoiceId, amount, description, clientName, clientEmail
+        )
 
         result.onSuccess { paymentInitiation ->
             runOnUiThread {
-                when (selectedPaymentGateway) {
-                    PaymentGateway.PAYFAST -> openPayFastPayment(paymentInitiation)
-                    PaymentGateway.OZOW -> openOzowPayment(paymentInitiation)
-                    PaymentGateway.STRIPE -> openStripePayment(paymentInitiation)
-                }
+                openStripePayment(paymentInitiation)
             }
         }.onFailure { error ->
             runOnUiThread {
@@ -441,28 +408,6 @@ class ClientCreateBookingsActivity : AppCompatActivity() {
                 ).show()
             }
         }
-    }
-
-    private fun openPayFastPayment(paymentInitiation: com.example.insy_7315.models.PaymentInitiation) {
-        val params = paymentInitiation.paymentData.entries.joinToString("&") { (key, value) ->
-            "$key=${Uri.encode(value)}"
-        }
-        val url = "${paymentInitiation.paymentUrl}?$params"
-
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        startActivity(intent)
-        finish()
-    }
-
-    private fun openOzowPayment(paymentInitiation: com.example.insy_7315.models.PaymentInitiation) {
-        val params = paymentInitiation.paymentData.entries.joinToString("&") { (key, value) ->
-            "$key=${Uri.encode(value)}"
-        }
-        val url = "${paymentInitiation.paymentUrl}?$params"
-
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-        startActivity(intent)
-        finish()
     }
 
     private fun openStripePayment(paymentInitiation: com.example.insy_7315.models.PaymentInitiation) {

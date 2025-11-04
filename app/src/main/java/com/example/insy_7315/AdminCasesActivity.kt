@@ -1,13 +1,12 @@
 package com.example.insy_7315
 
-import android.Manifest
 import android.app.AlertDialog
-import android.content.pm.PackageManager
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.pdf.PdfDocument
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -21,7 +20,6 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.insy_7315.database.DatabaseHelper
@@ -31,8 +29,6 @@ import com.example.insy_7315.models.Test
 import com.example.insy_7315.models.User
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -51,7 +47,6 @@ class AdminCasesActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "AdminCases"
-        private const val STORAGE_PERMISSION_CODE = 100
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +56,6 @@ class AdminCasesActivity : AppCompatActivity() {
 
         setupClickListeners()
         setupSearch()
-        checkStoragePermission()
         loadData()
     }
 
@@ -87,20 +81,6 @@ class AdminCasesActivity : AppCompatActivity() {
                 filterData(s.toString())
             }
         })
-    }
-
-    private fun checkStoragePermission() {
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                STORAGE_PERMISSION_CODE
-            )
-        }
     }
 
     private fun loadData() {
@@ -334,34 +314,22 @@ class AdminCasesActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                val pdfDocument = PdfDocument()
-                val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4 size
-                val page = pdfDocument.startPage(pageInfo)
+                // Call backend to generate PDF
+                val result = DatabaseHelper.httpClient.request("pdf/test-report/${test.testId}", "POST")
 
-                drawPdfContent(page.canvas, test)
-
-                pdfDocument.finishPage(page)
-
-                // Save PDF
-                val fileName = "Admin_Test_Report_${test.testId}_${System.currentTimeMillis()}.pdf"
-                val file = File(
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-                    fileName
+                result.fold(
+                    onSuccess = { json ->
+                        val pdfUrl = json.getString("pdfUrl")
+                        showPdfDownloadSuccess(pdfUrl, test)
+                    },
+                    onFailure = { error ->
+                        Toast.makeText(
+                            this@AdminCasesActivity,
+                            "Failed to generate PDF: ${error.message}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    }
                 )
-
-                FileOutputStream(file).use { outputStream ->
-                    pdfDocument.writeTo(outputStream)
-                }
-
-                pdfDocument.close()
-
-                Toast.makeText(
-                    this@AdminCasesActivity,
-                    "PDF downloaded: ${file.absolutePath}",
-                    Toast.LENGTH_LONG
-                ).show()
-
-                Log.d(TAG, "PDF saved to: ${file.absolutePath}")
 
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to generate PDF", e)
@@ -374,207 +342,41 @@ class AdminCasesActivity : AppCompatActivity() {
         }
     }
 
-    private fun drawPdfContent(canvas: Canvas, test: Test) {
-        val paint = Paint()
-        var yPosition = 50f
-
-        // Header
-        paint.textSize = 24f
-        paint.color = 0xFFD4AF37.toInt()
-        paint.isFakeBoldText = true
-        canvas.drawText("KEY POLYGRAPH AND INVESTIGATIONS", 50f, yPosition, paint)
-        yPosition += 40f
-
-        paint.textSize = 18f
-        paint.isFakeBoldText = false
-        canvas.drawText("POLYGRAPH EXAMINATION REPORT", 50f, yPosition, paint)
-        yPosition += 30f
-
-        paint.textSize = 14f
-        paint.color = 0xFF9C27B0.toInt()
-        canvas.drawText("ADMINISTRATIVE COPY", 50f, yPosition, paint)
-        yPosition += 50f
-
-        // Divider line
-        paint.color = 0xFFD4AF37.toInt()
-        canvas.drawLine(50f, yPosition, 545f, yPosition, paint)
-        yPosition += 30f
-
-        // Report Details
-        paint.textSize = 12f
-        paint.color = 0xFF000000.toInt()
-
-        canvas.drawText("Report ID: #TEST-${test.testId}", 50f, yPosition, paint)
-        yPosition += 25f
-
-        canvas.drawText("Examination Date: ${formatDate(test.testDate)}", 50f, yPosition, paint)
-        yPosition += 25f
-
-        canvas.drawText("Examination Time: ${test.testTime}", 50f, yPosition, paint)
-        yPosition += 25f
-
-        if (test.testLocation != null) {
-            canvas.drawText("Location: ${test.testLocation}", 50f, yPosition, paint)
-            yPosition += 25f
-        }
-
-        canvas.drawText("Test Type: ${test.testName ?: "Polygraph Examination"}", 50f, yPosition, paint)
-        yPosition += 40f
-
-        // Examinee Information
-        paint.textSize = 14f
-        paint.isFakeBoldText = true
-        canvas.drawText("EXAMINEE INFORMATION", 50f, yPosition, paint)
-        yPosition += 25f
-
-        paint.textSize = 12f
-        paint.isFakeBoldText = false
-        canvas.drawText("Name: ${test.examineeName}", 50f, yPosition, paint)
-        yPosition += 25f
-
-        if (test.examineeDetails != null) {
-            // Word wrap for examinee details
-            val maxWidth = 495f
-            val words = test.examineeDetails.split(" ")
-            var line = ""
-
-            for (word in words) {
-                val testLine = if (line.isEmpty()) word else "$line $word"
-                val textWidth = paint.measureText(testLine)
-
-                if (textWidth > maxWidth && line.isNotEmpty()) {
-                    canvas.drawText(line, 50f, yPosition, paint)
-                    yPosition += 20f
-                    line = word
-                } else {
-                    line = testLine
-                }
+    private fun showPdfDownloadSuccess(pdfUrl: String, test: Test) {
+        val alertDialog = AlertDialog.Builder(this)
+            .setTitle("PDF Generated Successfully")
+            .setMessage("The admin test report has been generated and stored securely in Azure Blob Storage. You can access it using the link below.")
+            .setPositiveButton("Open PDF") { _, _ ->
+                openPdfUrl(pdfUrl)
             }
-
-            if (line.isNotEmpty()) {
-                canvas.drawText(line, 50f, yPosition, paint)
-                yPosition += 25f
+            .setNeutralButton("Copy Link") { _, _ ->
+                // Copy URL to clipboard
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("PDF URL", pdfUrl)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this, "PDF link copied to clipboard", Toast.LENGTH_SHORT).show()
             }
+            .setNegativeButton("Close", null)
+            .create()
+
+        alertDialog.show()
+    }
+
+    private fun openPdfUrl(pdfUrl: String) {
+        try {
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(pdfUrl))
+            startActivity(intent)
+        } catch (e: Exception) {
+            Toast.makeText(
+                this,
+                "No app available to open PDF. Link copied to clipboard.",
+                Toast.LENGTH_LONG
+            ).show()
+            // Fallback: copy to clipboard
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("PDF URL", pdfUrl)
+            clipboard.setPrimaryClip(clip)
         }
-        yPosition += 20f
-
-        // Examiner Information
-        paint.textSize = 14f
-        paint.isFakeBoldText = true
-        canvas.drawText("EXAMINER INFORMATION", 50f, yPosition, paint)
-        yPosition += 25f
-
-        paint.textSize = 12f
-        paint.isFakeBoldText = false
-        canvas.drawText("Name: ${test.examinerName}", 50f, yPosition, paint)
-        yPosition += 25f
-
-        canvas.drawText("Email: ${test.examinerEmail}", 50f, yPosition, paint)
-        yPosition += 25f
-
-        if (test.examinerPhone != null) {
-            canvas.drawText("Phone: ${test.examinerPhone}", 50f, yPosition, paint)
-            yPosition += 25f
-        }
-        yPosition += 20f
-
-        // Test Outcome
-        paint.textSize = 14f
-        paint.isFakeBoldText = true
-        canvas.drawText("EXAMINATION RESULT", 50f, yPosition, paint)
-        yPosition += 25f
-
-        paint.textSize = 16f
-        paint.color = when (test.testOutcome) {
-            "Pass", "No Deception Indicated" -> 0xFF4CAF50.toInt()
-            "Fail", "Deception Indicated" -> 0xFFF44336.toInt()
-            else -> 0xFFFFA726.toInt()
-        }
-        canvas.drawText(test.testOutcome.uppercase(), 50f, yPosition, paint)
-        yPosition += 40f
-
-        // Result Summary
-        paint.color = 0xFF000000.toInt()
-        paint.textSize = 14f
-        paint.isFakeBoldText = true
-        canvas.drawText("SUMMARY", 50f, yPosition, paint)
-        yPosition += 25f
-
-        paint.textSize = 11f
-        paint.isFakeBoldText = false
-
-        // Word wrap for result summary
-        val maxWidth = 495f
-        val words = test.resultSummary.split(" ")
-        var line = ""
-
-        for (word in words) {
-            val testLine = if (line.isEmpty()) word else "$line $word"
-            val textWidth = paint.measureText(testLine)
-
-            if (textWidth > maxWidth && line.isNotEmpty()) {
-                canvas.drawText(line, 50f, yPosition, paint)
-                yPosition += 20f
-                line = word
-            } else {
-                line = testLine
-            }
-        }
-
-        if (line.isNotEmpty()) {
-            canvas.drawText(line, 50f, yPosition, paint)
-            yPosition += 30f
-        }
-
-        // Internal Notes (Admin only)
-        if (test.internalNotes != null) {
-            yPosition += 20f
-            paint.textSize = 14f
-            paint.isFakeBoldText = true
-            paint.color = 0xFF9C27B0.toInt()
-            canvas.drawText("INTERNAL NOTES (CONFIDENTIAL)", 50f, yPosition, paint)
-            yPosition += 25f
-
-            paint.textSize = 10f
-            paint.isFakeBoldText = false
-            paint.color = 0xFF000000.toInt()
-
-            val notesWords = test.internalNotes.split(" ")
-            line = ""
-
-            for (word in notesWords) {
-                val testLine = if (line.isEmpty()) word else "$line $word"
-                val textWidth = paint.measureText(testLine)
-
-                if (textWidth > maxWidth && line.isNotEmpty()) {
-                    canvas.drawText(line, 50f, yPosition, paint)
-                    yPosition += 18f
-                    line = word
-                } else {
-                    line = testLine
-                }
-            }
-
-            if (line.isNotEmpty()) {
-                canvas.drawText(line, 50f, yPosition, paint)
-                yPosition += 25f
-            }
-        }
-
-        // Footer
-        yPosition = 780f
-        paint.textSize = 10f
-        paint.color = 0xFF666666.toInt()
-        paint.isFakeBoldText = false
-        paint.textAlign = Paint.Align.CENTER
-
-        canvas.drawText("ADMINISTRATIVE REPORT - CONFIDENTIAL", 297.5f, yPosition, paint)
-        yPosition += 15f
-        canvas.drawText("This report contains internal notes and is for administrative use only", 297.5f, yPosition, paint)
-        yPosition += 15f
-        canvas.drawText("Generated on: ${SimpleDateFormat("MMMM dd, yyyy 'at' HH:mm", Locale.getDefault()).format(Date())}", 297.5f, yPosition, paint)
-
-        paint.textAlign = Paint.Align.LEFT
     }
 
     private fun showAssignExaminerDialog(booking: Booking) {
@@ -754,26 +556,6 @@ class AdminCasesActivity : AppCompatActivity() {
     }
 
     private fun dpToPx(dp: Int): Int = (dp * resources.displayMetrics.density).toInt()
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if (requestCode == STORAGE_PERMISSION_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "Storage permission granted")
-            } else {
-                Toast.makeText(
-                    this,
-                    "Storage permission is required to download PDFs",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        }
-    }
 
     override fun onResume() {
         super.onResume()

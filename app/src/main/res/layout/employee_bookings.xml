@@ -98,58 +98,6 @@
                 android:layout_marginTop="12dp"/>
         </LinearLayout>
 
-        <!-- View Toggle Buttons -->
-        <LinearLayout
-            android:id="@+id/viewToggle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="#1A1A1A"
-            android:padding="4dp"
-            app:layout_constraintTop_toBottomOf="@id/titleSection"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/dayViewBtn"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="DAY"
-                android:textSize="12sp"
-                android:textColor="#999999"
-                android:fontFamily="sans-serif-medium"
-                app:backgroundTint="#1A1A1A"
-                app:cornerRadius="6dp"
-                android:layout_marginEnd="4dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/weekViewBtn"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="WEEK"
-                android:textSize="12sp"
-                android:textColor="#999999"
-                android:fontFamily="sans-serif-medium"
-                app:backgroundTint="#1A1A1A"
-                app:cornerRadius="6dp"
-                android:layout_marginEnd="4dp"/>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/monthViewBtn"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_weight="1"
-                android:text="MONTH"
-                android:textSize="12sp"
-                android:textColor="#000000"
-                android:fontFamily="sans-serif-medium"
-                app:backgroundTint="#D4AF37"
-                app:cornerRadius="6dp"/>
-        </LinearLayout>
-
         <!-- Month Navigation -->
         <LinearLayout
             android:id="@+id/monthNavigation"
@@ -157,7 +105,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            app:layout_constraintTop_toBottomOf="@id/viewToggle"
+            app:layout_constraintTop_toBottomOf="@id/titleSection"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="24dp">

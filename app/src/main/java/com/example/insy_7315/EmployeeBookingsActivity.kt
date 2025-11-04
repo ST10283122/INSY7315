@@ -10,12 +10,10 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.insy_7315.database.DatabaseHelper
 import com.example.insy_7315.databinding.EmployeeBookingsBinding
 import com.example.insy_7315.models.Booking
-import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -85,45 +83,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
             updateMonthDisplay()
             generateCalendar()
         }
-
-        // View toggle buttons
-        binding.dayViewBtn.setOnClickListener {
-            updateViewToggle("day")
-            // TODO: Implement day view
-        }
-
-        binding.weekViewBtn.setOnClickListener {
-            updateViewToggle("week")
-            // TODO: Implement week view
-        }
-
-        binding.monthViewBtn.setOnClickListener {
-            updateViewToggle("month")
-        }
-    }
-
-    private fun updateViewToggle(selectedView: String) {
-        // Reset all buttons
-        resetButtonStyle(binding.dayViewBtn)
-        resetButtonStyle(binding.weekViewBtn)
-        resetButtonStyle(binding.monthViewBtn)
-
-        // Set selected button style
-        when (selectedView) {
-            "day" -> setSelectedButtonStyle(binding.dayViewBtn)
-            "week" -> setSelectedButtonStyle(binding.weekViewBtn)
-            "month" -> setSelectedButtonStyle(binding.monthViewBtn)
-        }
-    }
-
-    private fun resetButtonStyle(button: MaterialButton) {
-        button.setTextColor(0xFF999999.toInt())
-        button.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.transparent)
-    }
-
-    private fun setSelectedButtonStyle(button: MaterialButton) {
-        button.setTextColor(0xFF000000.toInt())
-        button.backgroundTintList = ContextCompat.getColorStateList(this, R.color.gold)
     }
 
     private fun updateMonthDisplay() {

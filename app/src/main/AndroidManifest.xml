@@ -90,5 +90,9 @@
         <activity
             android:name=".AdminCasesActivity"
             android:exported="false" />
+        <activity
+            android:name=".AdminStatsActivity"
+            android:exported="false" />
+
     </application>
 </manifest>

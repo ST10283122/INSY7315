@@ -48,10 +48,6 @@ class BookingDetailsActivity : AppCompatActivity() {
             payWithStripe()
         }
 
-        binding.rescheduleButton.setOnClickListener {
-            Toast.makeText(this, "Reschedule feature coming soon", Toast.LENGTH_SHORT).show()
-        }
-
         binding.cancelBookingButton.setOnClickListener {
             showCancelDialog()
         }
@@ -128,7 +124,6 @@ class BookingDetailsActivity : AppCompatActivity() {
         if (booking.bookingStatus.uppercase() == "CANCELLED" ||
             booking.bookingStatus.uppercase() == "COMPLETED") {
             binding.actionsLabel.visibility = View.GONE
-            binding.rescheduleButton.visibility = View.GONE
             binding.cancelBookingButton.visibility = View.GONE
         }
     }

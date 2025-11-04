@@ -42,15 +42,10 @@ class AdminPortalActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        // Analytics Card - Add functionality later
+        // Analytics Card - Navigate to AdminStatsActivity
         binding.analyticsCard.setOnClickListener {
-            // TODO: Implement Analytics functionality
-            // For now, show a placeholder message
-            android.widget.Toast.makeText(
-                this,
-                "Analytics feature coming soon",
-                android.widget.Toast.LENGTH_SHORT
-            ).show()
+            val intent = Intent(this, AdminStatsActivity::class.java)
+            startActivity(intent)
         }
     }
 }
