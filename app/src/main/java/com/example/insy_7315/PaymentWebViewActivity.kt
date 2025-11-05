@@ -39,14 +39,12 @@ class PaymentWebViewActivity : AppCompatActivity() {
                 return handleUrl(url)
             }
 
-            // Deprecated fallback for older devices
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 return handleUrl(url)
             }
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                // Optionally show a toast or hide a loading spinner
             }
 
             override fun onReceivedError(

@@ -48,7 +48,6 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
-        // Forgot Password link (placeholder for now)
         binding.forgotPassword.setOnClickListener {
             Toast.makeText(this, "Forgot password feature coming soon", Toast.LENGTH_SHORT).show()
         }

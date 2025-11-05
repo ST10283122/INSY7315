@@ -287,20 +287,16 @@ class AdminStatsActivity : AppCompatActivity() {
                         return@withContext
                     }
 
-                    // Count bookings by test type
                     val typeCountMap = mutableMapOf<Int, Int>()
                     bookings.forEach { booking ->
                         val count = typeCountMap.getOrDefault(booking.testTypeId, 0)
                         typeCountMap[booking.testTypeId] = count + 1
                     }
 
-                    // Create a map of test type ID to name
                     val typeNameMap = types.associate { it.testTypeId to it.testName }
 
-                    // Sort by count descending
                     val sortedTypes = typeCountMap.entries.sortedByDescending { it.value }
 
-                    // Define colors for the breakdown
                     val colors = listOf(
                         "#D4AF37", "#4CAF50", "#2196F3", "#FFA726", "#E91E63", "#9C27B0"
                     )
@@ -320,7 +316,6 @@ class AdminStatsActivity : AppCompatActivity() {
 
                         testTypeBreakdownContainer.addView(itemView)
 
-                        // Add divider except for last item
                         if (index < sortedTypes.size - 1) {
                             val divider = View(this@AdminStatsActivity).apply {
                                 layoutParams = LinearLayout.LayoutParams(
@@ -407,7 +402,7 @@ class AdminStatsActivity : AppCompatActivity() {
                 )
             })
 
-            // Color bar (proportional to percentage)
+            // Color bar
             addView(View(this@AdminStatsActivity).apply {
                 val maxWidth = dpToPx(60)
                 val actualWidth = (maxWidth * percentage / 100).coerceAtLeast(dpToPx(8))

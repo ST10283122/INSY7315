@@ -27,15 +27,12 @@ class EmployeeBookingsActivity : AppCompatActivity() {
     private var selectedDate: String? = null
     private var employeeId: Int = 0
     private var employeeName: String = ""
-
-    // Use EnrichedBooking (booking + amountPaid + balance)
     private val bookingsByDate = mutableMapOf<String, List<EnrichedBooking>>()
 
     companion object {
         private const val TAG = "EmployeeBookings"
     }
 
-    // Small holder to carry payment info alongside booking
     data class EnrichedBooking(
         val booking: Booking,
         val amountPaid: Double,
@@ -47,7 +44,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
         binding = EmployeeBookingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Get employee info from intent or session
         employeeId = intent.getIntExtra("USER_ID", 0)
         employeeName = intent.getStringExtra("USER_NAME") ?: "Employee"
 
@@ -115,7 +111,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
 
                     Log.d(TAG, "After filtering: ${relevantBookings.size} bookings remain")
 
-                    // Enrich each booking with payment info concurrently
                     val enrichedList = relevantBookings.map { booking ->
                         async {
                             var amountPaid = 0.0
@@ -133,7 +128,7 @@ class EmployeeBookingsActivity : AppCompatActivity() {
                                         Log.w(TAG, "Failed to fetch invoice balance for invoice ${invoice.invoiceId}", e)
                                     }
                                 } else {
-                                    // No invoices -> everything unpaid
+
                                     amountPaid = 0.0
                                     balance = booking.sessionFee
                                 }
@@ -145,7 +140,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
                         }
                     }.awaitAll()
 
-                    // Group enriched bookings by normalized date
                     bookingsByDate.clear()
                     enrichedList.forEach { enriched ->
                         val booking = enriched.booking
@@ -160,7 +154,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
                                 val parsedDate = isoFormat.parse(rawDate)
                                 outputFormat.format(parsedDate ?: Date())
                             } else {
-                                // assume already "yyyy-MM-dd"
                                 rawDate
                             }
                         } catch (e: Exception) {
@@ -180,7 +173,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
 
                     generateCalendar()
 
-                    // Show today's appointments by default
                     val today = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
                     Log.d(TAG, "Today's date: $today")
                     displayAppointmentsForDate(today)
@@ -287,7 +279,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
         }
     }
 
-    // Adjusted to accept EnrichedBooking list
     private fun createDayCell(
         day: Int,
         bookings: List<EnrichedBooking>?,
@@ -303,7 +294,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
             isClickable = true
             isFocusable = true
 
-            // Set background based on booking status
             if (!bookings.isNullOrEmpty()) {
                 setBackgroundColor(0xFFD4AF37.toInt())
                 Log.d(TAG, "Setting gold background for day $day")
@@ -336,7 +326,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
         }
         container.addView(dayText)
 
-        // Add dots for bookings
         if (!bookings.isNullOrEmpty()) {
             val dotsLayout = LinearLayout(this).apply {
                 layoutParams = LinearLayout.LayoutParams(
@@ -379,7 +368,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
         val enrichedBookings = bookingsByDate[dateString] ?: emptyList()
         Log.d(TAG, "Found ${enrichedBookings.size} booking(s) for this date")
 
-        // Update selected day label
         val displayDate = try {
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val outputFormat = SimpleDateFormat("MMMM dd", Locale.getDefault())
@@ -392,7 +380,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
 
         binding.selectedDayLabel.text = "APPOINTMENTS - $displayDate"
 
-        // Clear existing appointments
         binding.appointmentsList.removeAllViews()
 
         if (enrichedBookings.isEmpty()) {
@@ -416,7 +403,6 @@ class EmployeeBookingsActivity : AppCompatActivity() {
         }
     }
 
-    // Now accepts an EnrichedBooking so we can read amountPaid and balance
     private fun inflateAppointmentItem(enriched: EnrichedBooking): View {
         val booking = enriched.booking
 

@@ -29,7 +29,6 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
-        // Login link - pass flag to prevent auto-login
         binding.loginLink.setOnClickListener {
             val intent = Intent(this, LoginActivity::class.java)
             intent.putExtra("FROM_REGISTRATION", true)
@@ -121,12 +120,11 @@ class RegisterActivity : AppCompatActivity() {
         val phone = binding.phoneInput.text.toString().trim()
         val password = binding.passwordInput.text.toString()
 
-        // Disable button to prevent double submission
         binding.registerButton.isEnabled = false
         binding.registerButton.text = "CREATING ACCOUNT..."
 
         lifecycleScope.launch {
-            // Register the user as a Client - send plain password
+            // Register the user as a Client
             val result = DatabaseHelper.registerUser(
                 fullName = name,
                 email = email,
@@ -143,7 +141,6 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                // Navigate to login screen
                 startActivity(Intent(this@RegisterActivity, LoginActivity::class.java))
                 finish()
             }.onFailure { error ->

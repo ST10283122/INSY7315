@@ -43,8 +43,7 @@ class AdminCasesActivity : AppCompatActivity() {
     private var pendingCurrentPage = 1
     private var archivedPageSize = 10
     private var archivedCurrentPage = 1
-    private val adminUserId = 1 // Replace with actual admin user ID from session
-
+    private val adminUserId = 1
     companion object {
         private const val TAG = "AdminCases"
     }
@@ -85,7 +84,6 @@ class AdminCasesActivity : AppCompatActivity() {
 
     private fun loadData() {
         lifecycleScope.launch {
-            // Load bookings
             val bookingsResult = DatabaseHelper.getAllBookings()
             bookingsResult.onSuccess { bookings ->
                 allBookings = bookings
@@ -128,7 +126,6 @@ class AdminCasesActivity : AppCompatActivity() {
     }
 
     private fun filterData(query: String) {
-        // Filter bookings
         filteredBookings = if (query.isEmpty()) {
             allBookings
         } else {
@@ -140,7 +137,6 @@ class AdminCasesActivity : AppCompatActivity() {
             }
         }
 
-        // Filter tests
         filteredTests = if (query.isEmpty()) {
             allTests
         } else {
@@ -236,8 +232,6 @@ class AdminCasesActivity : AppCompatActivity() {
                 addDivider(binding.pendingCasesList)
             }
         }
-
-        // Show/hide load more button
         binding.loadMorePendingButton.visibility = if (casesToShow.size < pendingCases.size) {
             View.VISIBLE
         } else {
@@ -297,7 +291,6 @@ class AdminCasesActivity : AppCompatActivity() {
             binding.archivedTestsList.addView(testView)
         }
 
-        // Show/hide load more button
         binding.loadMoreArchivedButton.visibility = if (testsToShow.size < filteredTests.size) {
             View.VISIBLE
         } else {
@@ -350,7 +343,6 @@ class AdminCasesActivity : AppCompatActivity() {
                 openPdfUrl(pdfUrl)
             }
             .setNeutralButton("Copy Link") { _, _ ->
-                // Copy URL to clipboard
                 val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip = ClipData.newPlainText("PDF URL", pdfUrl)
                 clipboard.setPrimaryClip(clip)
@@ -372,7 +364,6 @@ class AdminCasesActivity : AppCompatActivity() {
                 "No app available to open PDF. Link copied to clipboard.",
                 Toast.LENGTH_LONG
             ).show()
-            // Fallback: copy to clipboard
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("PDF URL", pdfUrl)
             clipboard.setPrimaryClip(clip)
@@ -390,7 +381,6 @@ class AdminCasesActivity : AppCompatActivity() {
         val actualDateInput = dialogView.findViewById<EditText>(R.id.actualDateInput)
         val actualTimeInput = dialogView.findViewById<EditText>(R.id.actualTimeInput)
 
-        // Pre-fill with current values if reassigning
         if (booking.actualDate != null) {
             actualDateInput.setText(booking.actualDate)
         } else {
@@ -403,15 +393,12 @@ class AdminCasesActivity : AppCompatActivity() {
             actualTimeInput.setText(booking.preferredTime)
         }
 
-        // Add radio buttons for each employee
         allEmployees.forEach { employee ->
             val radioButton = RadioButton(this).apply {
                 text = "${employee.fullName} - ${employee.specialization ?: "General"}"
                 id = employee.userId
                 textSize = 16f
                 setPadding(16, 16, 16, 16)
-
-                // Pre-select current examiner if reassigning
                 if (booking.employeeId == employee.userId) {
                     isChecked = true
                 }

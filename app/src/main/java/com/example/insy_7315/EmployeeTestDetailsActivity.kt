@@ -59,29 +59,22 @@ class EmployeeTestDetailsActivity : AppCompatActivity() {
     private fun loadBookingDetails() {
         lifecycleScope.launch {
             try {
-                // Load booking details
                 val bookingResult = DatabaseHelper.getBookingById(bookingId)
                 bookingResult.onSuccess { bookingData ->
                     booking = bookingData
                     populateBookingInfo(bookingData)
-
-                    // Load client details
                     val clientResult = DatabaseHelper.getUserById(bookingData.clientId)
                     clientResult.onSuccess { clientData ->
                         client = clientData
                     }
-
-                    // Check if test already exists
                     val testResult = DatabaseHelper.getTestByBooking(bookingId)
                     testResult.onSuccess { testData ->
                         existingTest = testData
                         populateTestData(testData)
                     }.onFailure {
-                        // No existing test, prepopulate with booking data
                         prepopulateFromBooking(bookingData)
                     }
 
-                    // Load payment status
                     loadPaymentStatus(bookingData.bookingId)
 
                 }.onFailure { error ->
@@ -137,7 +130,6 @@ class EmployeeTestDetailsActivity : AppCompatActivity() {
         binding.resultSummary.setText(test.resultSummary)
         binding.internalNotes.setText(test.internalNotes ?: "")
 
-        // Set outcome radio button
         when (test.testOutcome) {
             "Pass" -> binding.outcomePass.isChecked = true
             "Fail" -> binding.outcomeFail.isChecked = true
@@ -146,7 +138,6 @@ class EmployeeTestDetailsActivity : AppCompatActivity() {
             "Deception Indicated" -> binding.outcomeDI.isChecked = true
         }
 
-        // Set status radio button
         when (test.testStatus) {
             "Draft" -> binding.statusDraft.isChecked = true
             "Completed" -> binding.statusCompleted.isChecked = true
@@ -226,7 +217,6 @@ class EmployeeTestDetailsActivity : AppCompatActivity() {
         val examineeDetails = binding.examineeDetails.text.toString().trim().ifEmpty { null }
         val internalNotes = binding.internalNotes.text.toString().trim().ifEmpty { null }
 
-        // Get employee details for examiner info
         lifecycleScope.launch {
             try {
                 val employeeResult = DatabaseHelper.getUserById(employeeId)
@@ -412,7 +402,6 @@ class EmployeeTestDetailsActivity : AppCompatActivity() {
                 val date = isoFormat.parse(dateString)
                 outputFormat.format(date ?: Date())
             } else {
-                // Already in yyyy-MM-dd format or similar
                 if (dateString.length >= 10) dateString.substring(0, 10) else dateString
             }
         } catch (e: Exception) {

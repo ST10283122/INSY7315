@@ -74,7 +74,6 @@ class ClientBookingsActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val result = DatabaseHelper.getBookingsByClient(user.userId)
             result.onSuccess { bookings ->
-                // Now fetch invoice + balance info for each booking
                 val enrichedBookings = bookings.map { booking ->
                     async {
                         val invoicesResult = DatabaseHelper.getInvoicesByBooking(booking.bookingId)

@@ -27,31 +27,25 @@ class AdminCreateUserActivity : AppCompatActivity() {
     }
 
     private fun setupDropdowns() {
-        // Setup user role dropdown
         val roleAdapter = ArrayAdapter(this, R.layout.dropdown_menu_item, userRoles)
         binding.userRoleInput.setAdapter(roleAdapter)
 
-        // Setup account status dropdown
         val statusAdapter = ArrayAdapter(this, R.layout.dropdown_menu_item, accountStatuses)
         binding.accountStatusInput.setAdapter(statusAdapter)
 
-        // Set default values
         binding.userRoleInput.setText(userRoles[0], false) // Default to Employee
         binding.accountStatusInput.setText(accountStatuses[0], false) // Default to Active
     }
 
     private fun setupClickListeners() {
-        // Back button
         binding.backButton.setOnClickListener {
             finish()
         }
 
-        // Cancel button
         binding.cancelButton.setOnClickListener {
             finish()
         }
 
-        // Create user button
         binding.createUserButton.setOnClickListener {
             if (validateInputs()) {
                 createEmployeeUser()
@@ -68,7 +62,6 @@ class AdminCreateUserActivity : AppCompatActivity() {
         val confirmPassword = binding.confirmPasswordInput.text.toString()
         val accountStatus = binding.accountStatusInput.text.toString().trim()
 
-        // Validate full name
         if (name.isEmpty()) {
             binding.fullNameLayout.error = "Full name is required"
             binding.fullNameInput.requestFocus()
@@ -76,7 +69,6 @@ class AdminCreateUserActivity : AppCompatActivity() {
         }
         binding.fullNameLayout.error = null
 
-        // Validate email
         if (email.isEmpty()) {
             binding.emailLayout.error = "Email is required"
             binding.emailInput.requestFocus()
@@ -89,7 +81,6 @@ class AdminCreateUserActivity : AppCompatActivity() {
         }
         binding.emailLayout.error = null
 
-        // Validate phone
         if (phone.isEmpty()) {
             binding.phoneLayout.error = "Phone number is required"
             binding.phoneInput.requestFocus()
@@ -102,7 +93,6 @@ class AdminCreateUserActivity : AppCompatActivity() {
         }
         binding.phoneLayout.error = null
 
-        // Validate user role
         if (userRole.isEmpty() || !userRoles.contains(userRole)) {
             binding.userRoleLayout.error = "Please select a valid user role"
             binding.userRoleInput.requestFocus()
@@ -110,7 +100,6 @@ class AdminCreateUserActivity : AppCompatActivity() {
         }
         binding.userRoleLayout.error = null
 
-        // Validate password
         if (password.isEmpty()) {
             binding.passwordLayout.error = "Password is required"
             binding.passwordInput.requestFocus()
@@ -128,7 +117,6 @@ class AdminCreateUserActivity : AppCompatActivity() {
         }
         binding.passwordLayout.error = null
 
-        // Validate confirm password
         if (confirmPassword.isEmpty()) {
             binding.confirmPasswordLayout.error = "Please confirm password"
             binding.confirmPasswordInput.requestFocus()
@@ -141,7 +129,6 @@ class AdminCreateUserActivity : AppCompatActivity() {
         }
         binding.confirmPasswordLayout.error = null
 
-        // Validate account status
         if (accountStatus.isEmpty() || !accountStatuses.contains(accountStatus)) {
             binding.accountStatusLayout.error = "Please select a valid account status"
             binding.accountStatusInput.requestFocus()

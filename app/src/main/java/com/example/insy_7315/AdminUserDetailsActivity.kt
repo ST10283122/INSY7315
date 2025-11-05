@@ -149,7 +149,6 @@ class AdminUserDetailsActivity : AppCompatActivity() {
         phoneInput.setText(user.phone)
         addressInput.setText(user.address)
 
-        // Show professional fields only for employees
         if (user.userRole == "Employee") {
             professionalSection.visibility = View.VISIBLE
             certificationInput.setText(user.certification)

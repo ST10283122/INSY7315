@@ -9,7 +9,7 @@ import java.net.URL
 interface HttpClient {
     suspend fun request(endpoint: String, method: String, body: JSONObject? = null): Result<JSONObject>
 }
-
+//(No date) Reddit.com. Available at: https://www.reddit.com/r/learnpython/comments/1gmgbj8/what_exactly_is_a_http_client/ (Accessed: November 5, 2025).
 class RealHttpClient(private val baseUrl: String) : HttpClient {
     override suspend fun request(endpoint: String, method: String, body: JSONObject?): Result<JSONObject> {
         return withContext(Dispatchers.IO) {

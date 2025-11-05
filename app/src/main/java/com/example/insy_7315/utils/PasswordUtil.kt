@@ -16,6 +16,8 @@ object PasswordUtil {
         return "$salt:$hash"
     }
 
+    //(No date) Medium.com. Available at: https://markilott.medium.com/password-storage-basics-2aa9e1586f98 (Accessed: November 5, 2025).
+
     // Verify password against stored hash
     fun verifyPassword(password: String, storedHash: String): Boolean {
         val parts = storedHash.split(":")

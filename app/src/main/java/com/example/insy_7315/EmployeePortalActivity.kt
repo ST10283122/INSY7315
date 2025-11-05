@@ -23,10 +23,7 @@ class EmployeePortalActivity : AppCompatActivity() {
     }
 
     private fun setupUI() {
-        // Get logged-in user info
         val user = sessionManager.getUser()
-
-        // Display user name
         binding.userNameText.text = user?.fullName ?: "Guest"
     }
 
@@ -70,7 +67,6 @@ class EmployeePortalActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh UI in case data changed
         setupUI()
     }
 }

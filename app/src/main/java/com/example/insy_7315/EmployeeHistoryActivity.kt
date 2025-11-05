@@ -72,7 +72,6 @@ class EmployeeHistoryActivity : AppCompatActivity() {
             override fun afterTextChanged(s: Editable?) {}
         })
 
-        // Clear search when clear icon is clicked
         binding.searchLayout.setEndIconOnClickListener {
             binding.searchInput.text?.clear()
             filterTests("")
@@ -88,19 +87,12 @@ class EmployeeHistoryActivity : AppCompatActivity() {
             filteredTests = allTests.filter { test ->
                 // Search by client name
                 (test.examineeName?.lowercase(Locale.getDefault())?.contains(searchQuery) == true) ||
-                        // Search by test type/name
                         (test.testName?.lowercase(Locale.getDefault())?.contains(searchQuery) == true) ||
-                        // Search by test outcome
                         (test.testOutcome?.lowercase(Locale.getDefault())?.contains(searchQuery) == true) ||
-                        // Search by test status
                         (test.testStatus?.lowercase(Locale.getDefault())?.contains(searchQuery) == true) ||
-                        // Search by test ID
                         ("TEST-${test.testId}".lowercase(Locale.getDefault()).contains(searchQuery)) ||
-                        // Search by date
                         (formatDate(test.testDate).lowercase(Locale.getDefault()).contains(searchQuery)) ||
-                        // Search by location
                         (test.testLocation?.lowercase(Locale.getDefault())?.contains(searchQuery) == true) ||
-                        // Search by examiner details
                         (test.examinerName?.lowercase(Locale.getDefault())?.contains(searchQuery) == true) ||
                         (test.examinerEmail?.lowercase(Locale.getDefault())?.contains(searchQuery) == true)
             }
@@ -187,16 +179,12 @@ class EmployeeHistoryActivity : AppCompatActivity() {
 
         if (tests.isEmpty()) {
             if (binding.searchInput.text?.isNotEmpty() == true) {
-                // Show search empty state
                 binding.emptyState.visibility = View.GONE
                 binding.searchEmptyState.visibility = View.VISIBLE
                 binding.resultsList.visibility = View.GONE
-
-                // Update search empty text
                 val searchEmptyText = binding.searchEmptyState.findViewById<TextView>(R.id.searchEmptyText)
                 searchEmptyText.text = "No tests found for \"${binding.searchInput.text}\""
             } else {
-                // Show regular empty state
                 binding.emptyState.visibility = View.VISIBLE
                 binding.searchEmptyState.visibility = View.GONE
                 binding.resultsList.visibility = View.GONE
@@ -216,20 +204,12 @@ class EmployeeHistoryActivity : AppCompatActivity() {
     private fun inflateTestItem(test: Test): View {
         val view = LayoutInflater.from(this)
             .inflate(R.layout.item_test_result, binding.resultsList, false)
-
-        // Test ID
         val testIdText = view.findViewById<TextView>(R.id.testIdText)
         testIdText.text = "#TEST-${test.testId}"
-
-        // Client Name
         val clientNameText = view.findViewById<TextView>(R.id.clientNameText)
         clientNameText.text = test.examineeName
-
-        // Test Type
         val testTypeText = view.findViewById<TextView>(R.id.testTypeText)
         testTypeText.text = test.testName ?: "Polygraph Test"
-
-        // Outcome Badge
         val outcomeBadge = view.findViewById<TextView>(R.id.outcomeBadge)
         outcomeBadge.text = test.testOutcome.uppercase()
         outcomeBadge.setBackgroundColor(
@@ -240,19 +220,15 @@ class EmployeeHistoryActivity : AppCompatActivity() {
             }
         )
 
-        // Test Date
         val testDateText = view.findViewById<TextView>(R.id.testDateText)
         testDateText.text = formatDate(test.testDate)
 
-        // Location
         val locationText = view.findViewById<TextView>(R.id.locationText)
         locationText.text = test.testLocation ?: "N/A"
 
-        // Status
         val statusText = view.findViewById<TextView>(R.id.statusText)
         statusText.text = test.testStatus
 
-        // Download Button
         val downloadBtn = view.findViewById<MaterialButton>(R.id.downloadPdfBtn)
         downloadBtn.setOnClickListener {
             generateAndDownloadPdf(test)
@@ -308,6 +284,8 @@ class EmployeeHistoryActivity : AppCompatActivity() {
             }
         }
     }
+
+    //Hammoush, A. (2023) Kotlin: Generate PDF file, Medium. Available at: https://medium.com/@ahmad.hamoush.785/kotlin-generate-pdf-file-55cbfea73c4c (Accessed: November 5, 2025).
 
     private fun showPdfDownloadSuccess(pdfUrl: String, test: Test) {
         val alertDialog = AlertDialog.Builder(this)

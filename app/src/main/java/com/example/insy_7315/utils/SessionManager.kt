@@ -43,4 +43,12 @@ class SessionManager(context: Context) {
     fun logout() {
         prefs.edit().clear().apply()
     }
+
+    fun getAuthHeaders(): Map<String, String> {
+        val user = getUser() ?: return emptyMap()
+        return mapOf(
+            "x-user-id" to user.userId.toString(),
+            "x-user-email" to user.email
+        )
+    }
 }

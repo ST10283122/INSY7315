@@ -31,12 +31,10 @@ class ClientPortalActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
-        // Book Session - Navigate to ClientBookingsActivity
         binding.bookSessionCard.setOnClickListener {
             startActivity(Intent(this, ClientBookingsActivity::class.java))
         }
 
-        // In ClientDashboardActivity or ClientPortalActivity
         binding.testHistoryCard.setOnClickListener {
             val user = sessionManager.getUser()
             if (user != null) {

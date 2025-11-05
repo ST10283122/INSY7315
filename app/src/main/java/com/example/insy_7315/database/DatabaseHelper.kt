@@ -10,9 +10,9 @@ import androidx.annotation.VisibleForTesting
 
 object DatabaseHelper {
     private const val TAG = "DatabaseHelper"
-    const val BASE_URL = "http://192.168.1.35:3000/api"
+    const val BASE_URL = "https://polygraph-backend.azurewebsites.net/api"
 
-    // Injectible HTTP client - defaults to real implementation
+    // Injectible HTTP client
     var httpClient: HttpClient = RealHttpClient(BASE_URL)
 
     data class StripeConfig(
